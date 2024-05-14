@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
+import Landing from "@/components/landing/landing";
 import NavbarComponent from "@/components/navigation/navbar";
 import "./globals.css";
 
