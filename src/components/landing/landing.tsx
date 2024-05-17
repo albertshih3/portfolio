@@ -48,7 +48,7 @@ export default function LandingPage() {
                 {lettersHello.map((letter, index) => (
                   <motion.span
                     key={index}
-                    className="text-8xl sm:text-9xl md:text-10xl lg:text-11xl font-extrabold text-white"
+                    className="text-6xl sm:text-9xl md:text-10xl lg:text-11xl font-extrabold text-white"
                     initial={{ opacity: 0, y: 100 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.08 }}
@@ -67,7 +67,7 @@ export default function LandingPage() {
                   {lettersName.map((letter, index) => (
                     <motion.span
                       key={index}
-                      className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white"
+                      className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white"
                       initial={{ opacity: 0, y: 100 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, delay: 1 + index * 0.08 }}
