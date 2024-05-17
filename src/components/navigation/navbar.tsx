@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Navbar,
   NavbarBrand,
@@ -10,15 +12,26 @@ import {
 } from "@nextui-org/react";
 import Image from "next/image";
 import Link from "next/link";
+import { ThemeSwitcher } from "./themeswitcher";
+import React from "react";
 
 export default function NavbarComponent() {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
   return (
-    <Navbar>
+    <Navbar onMenuOpenChange={setIsMenuOpen}>
+      <NavbarContent>
+      <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          className="sm:hidden"
+        />
       <NavbarBrand>
         <Link href="/">
             <Image src="/logo.png" alt="Website Logo" width={40} height={40} />
           </Link>
       </NavbarBrand>
+      </NavbarContent>
+
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <Link color="foreground" href="/about">
@@ -46,6 +59,29 @@ export default function NavbarComponent() {
           </Button>
         </NavbarItem>
       </NavbarContent>
+
+      <NavbarMenu>
+      <NavbarMenuItem>
+          <Link className='w-full' href="/about">
+            About
+          </Link>
+        </NavbarMenuItem>
+        <NavbarMenuItem>
+          <Link className='w-full' href="/projects">
+            Projects
+          </Link>
+        </NavbarMenuItem>
+        <NavbarMenuItem>
+          <Link className='w-full' href="/blog">
+            Blog
+          </Link>
+        </NavbarMenuItem>
+        <NavbarMenuItem>
+          <Link className='w-full' href="/resume">
+            Resume
+          </Link>
+        </NavbarMenuItem>
+      </NavbarMenu>
     </Navbar>
   );
 }
