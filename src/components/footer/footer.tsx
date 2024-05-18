@@ -1,6 +1,6 @@
 import React from 'react';
-import { Spacer, Link } from '@nextui-org/react'; // Import from NextUI
-import { Linkedin, Github } from 'lucide-react'; // Icons
+import { Spacer, Link } from '@nextui-org/react';
+import { Linkedin, Github } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
