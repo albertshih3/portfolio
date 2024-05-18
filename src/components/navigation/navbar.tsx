@@ -51,7 +51,7 @@ export default function NavbarComponent() {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem className="hidden lg:flex">
-          <Link href="/resume">Resume</Link>
+          <Link href="https://files.albertshih.org/url/web_resume">Resume</Link>
         </NavbarItem>
         <NavbarItem>
           <Button as={Link} color="primary" href="/contact" variant="flat">
@@ -77,7 +77,7 @@ export default function NavbarComponent() {
           </Link>
         </NavbarMenuItem>
         <NavbarMenuItem>
-          <Link className='w-full' href="/resume">
+          <Link className='w-full' href="https://files.albertshih.org/url/web_resume">
             Resume
           </Link>
         </NavbarMenuItem>
