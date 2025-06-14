@@ -69,7 +69,7 @@ export default function Home() {
       <Sidebar onContactClick={() => handleContactClick('sidebar')} />
       
       <main className="lg:ml-72">
-        <div className="p-8">
+        <div className="pt-16 px-8 pb-8">
           {/* Hero Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}

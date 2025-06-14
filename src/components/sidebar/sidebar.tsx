@@ -70,13 +70,13 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
         <div className="p-6 h-full overflow-y-auto flex flex-col">
           {/* Profile section */}
           <div className="flex flex-col items-center mb-8">
-            <div className="w-20 h-20 bg-gray-300 dark:bg-gray-600 rounded-full mb-4 flex items-center justify-center overflow-hidden">
+            <div className="w-20 h-20 bg-gray-300 dark:bg-gray-600 rounded-full mb-4 overflow-hidden">
               <Image
                 src="/headshot.jpeg"
                 alt="Albert Shih"
                 width={80}
                 height={80}
-                className="rounded-full object-cover"
+                className="w-full h-full object-cover object-left-top"
                 onError={(e) => {
                   e.currentTarget.style.display = 'none';
                 }}
