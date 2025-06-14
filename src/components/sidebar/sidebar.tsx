@@ -3,12 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { 
   Home, 
   User, 
   FolderOpen, 
-  FileText, 
   Mail, 
   Github, 
   Linkedin,
@@ -20,13 +18,6 @@ import ThemeToggle from "@/components/theme/theme-toggle";
 
 interface SidebarProps {
   onContactClick?: () => void;
-}
-
-interface MenuItem {
-  name: string;
-  icon: React.ComponentType<{ size: number; className?: string }>;
-  href: string;
-  isButton?: boolean;
 }
 
 const Sidebar = ({ onContactClick }: SidebarProps) => {
@@ -44,15 +35,15 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
   const menuItems = [
     { name: "Home", icon: Home, href: "/" },
     { name: "About", icon: User, href: "/about" },
-    { name: "Projects", icon: FolderOpen, href: "#projects" },
-    { name: "Blog", icon: FileText, href: "/blog" },
+    { name: "Projects", icon: FolderOpen, href: "/#projects" },
+    // { name: "Blog", icon: FileText, href: "/blog" }, // Hidden for now
     { name: "Contact", icon: Mail, href: "/contact", isButton: true },
   ];
 
   const socialLinks = [
     { name: "GitHub", icon: Github, href: "https://github.com/albertshih3" },
     { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com/in/albertshih3" },
-    { name: "Resume", icon: ExternalLink, href: "https://files.albertshih.org/url/web_resume" },
+    { name: "Resume", icon: ExternalLink, href: "https://firebasestorage.googleapis.com/v0/b/portfolio-c973b.firebasestorage.app/o/resumes%2FResume.pdf?alt=media&token=160f41c0-7f08-43f4-b0a6-637eba12f03a" },
   ];
 
   return (
@@ -75,7 +66,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
 
       {/* Desktop Sidebar */}
       <div className="w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 hidden lg:block fixed left-0 top-0 h-screen z-10">
-        <div className="p-6 h-full overflow-y-auto">
+        <div className="p-6 h-full overflow-y-auto flex flex-col">
           {/* Profile section */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-20 h-20 bg-gray-300 dark:bg-gray-600 rounded-full mb-4 flex items-center justify-center overflow-hidden">
@@ -92,7 +83,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Albert Shih</h2>
             <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              Aspiring Software Engineer
+              Software Engineer
             </p>
           </div>
 
@@ -128,13 +119,10 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
           </nav>
 
           {/* Social links */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                Connect
-              </h3>
-              <ThemeToggle />
-            </div>
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6 flex-1">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+              Connect
+            </h3>
             <div className="space-y-2">
               {socialLinks.map((link) => (
                 <a
@@ -148,6 +136,14 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
                   {link.name}
                 </a>
               ))}
+            </div>
+          </div>
+
+          {/* Theme Toggle at Bottom */}
+          <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Theme</span>
+              <ThemeToggle />
             </div>
           </div>
         </div>
@@ -155,7 +151,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
 
       {/* Mobile Sidebar */}
       <div className={`fixed left-0 top-0 h-full w-72 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 z-50 transition-transform duration-300 ease-in-out lg:hidden ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-6 h-full overflow-y-auto">
+        <div className="p-6 h-full overflow-y-auto flex flex-col">
           {/* Profile section */}
           <div className="flex flex-col items-center mb-8">
             <div className="w-20 h-20 bg-gray-300 dark:bg-gray-600 rounded-full mb-4 flex items-center justify-center overflow-hidden">
@@ -172,7 +168,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Albert Shih</h2>
             <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              Aspiring Software Engineer
+              Software Engineer
             </p>
           </div>
 
@@ -208,13 +204,10 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
           </nav>
 
           {/* Social links */}
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
-                Connect
-              </h3>
-              <ThemeToggle />
-            </div>
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6 flex-1">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
+              Connect
+            </h3>
             <div className="space-y-2">
               {socialLinks.map((link) => (
                 <a
@@ -228,6 +221,14 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
                   {link.name}
                 </a>
               ))}
+            </div>
+          </div>
+
+          {/* Theme Toggle at Bottom */}
+          <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Theme</span>
+              <ThemeToggle />
             </div>
           </div>
         </div>

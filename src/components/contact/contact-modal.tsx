@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Mail, User, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { analytics } from "@/lib/firebase";
+import { logEvent } from "firebase/analytics";
 
 interface ContactModalProps {
   isOpen: boolean;
@@ -26,6 +28,13 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Track form submission attempt
+    if (analytics) {
+      logEvent(analytics, 'contact_form_submit', {
+        method: 'contact_modal'
+      });
+    }
+
     try {
       const response = await fetch("/api/send-email", {
         method: "POST",
@@ -35,6 +44,14 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
 
       if (response.ok) {
         toast.success("Message sent successfully!");
+        
+        // Track successful form submission
+        if (analytics) {
+          logEvent(analytics, 'contact_form_success', {
+            method: 'contact_modal'
+          });
+        }
+        
         setFormData({ name: "", email: "", message: "" });
         onClose();
       } else {
@@ -42,6 +59,14 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
       }
     } catch (error) {
       toast.error("Error sending message. Please try again.");
+      
+      // Track form submission error
+      if (analytics) {
+        logEvent(analytics, 'contact_form_error', {
+          method: 'contact_modal',
+          error: 'api_error'
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import Sidebar from "@/components/sidebar/sidebar";
 import ProjectCard from "@/components/projects/project-card";
 import ContactModal from "@/components/contact/contact-modal";
+import { analytics } from "@/lib/firebase";
+import { logEvent } from "firebase/analytics";
 
 const projects = [
   {
@@ -52,9 +54,19 @@ const projects = [
 export default function Home() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
+  const handleContactClick = (source: string) => {
+    // Track contact button clicks
+    if (analytics) {
+      logEvent(analytics, 'contact_button_click', {
+        button_source: source
+      });
+    }
+    setIsContactModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar onContactClick={() => setIsContactModalOpen(true)} />
+      <Sidebar onContactClick={() => handleContactClick('sidebar')} />
       
       <main className="lg:ml-72">
         <div className="p-8">
@@ -80,7 +92,7 @@ export default function Home() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
               >
-                I&apos;m an aspiring software engineer passionate about creating innovative solutions 
+                I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions 
                 that make a positive impact. I love building applications that solve real-world 
                 problems and connecting technology with meaningful purposes.
               </motion.p>
@@ -97,7 +109,7 @@ export default function Home() {
                   View My Work
                 </a>
                 <button
-                  onClick={() => setIsContactModalOpen(true)}
+                  onClick={() => handleContactClick('hero_section')}
                   className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors"
                 >
                   Get In Touch
@@ -152,7 +164,7 @@ export default function Home() {
               Feel free to reach out if you&apos;d like to connect!
             </p>
             <button
-              onClick={() => setIsContactModalOpen(true)}
+              onClick={() => handleContactClick('cta_section')}
               className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition-colors inline-block"
             >
               Contact Me

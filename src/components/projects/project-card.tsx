@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
+import { analytics } from "@/lib/firebase";
+import { logEvent } from "firebase/analytics";
 
 interface ProjectCardProps {
   name: string;
@@ -24,12 +26,48 @@ const ProjectCard = ({ name, description, language, topics, url, githubUrl }: Pr
     CSS: "bg-pink-500",
   };
 
+  const handleProjectClick = () => {
+    // Track project card clicks
+    if (analytics) {
+      logEvent(analytics, 'project_click', {
+        project_name: name,
+        project_language: language,
+        click_type: 'main_card'
+      });
+    }
+    window.open(url, "_blank");
+  };
+
+  const handleGithubClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (analytics) {
+      logEvent(analytics, 'project_click', {
+        project_name: name,
+        project_language: language,
+        click_type: 'github_button'
+      });
+    }
+    window.open(githubUrl, "_blank");
+  };
+
+  const handleExternalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (analytics) {
+      logEvent(analytics, 'project_click', {
+        project_name: name,
+        project_language: language,
+        click_type: 'external_button'
+      });
+    }
+    window.open(url, "_blank");
+  };
+
   return (
     <motion.div
       whileHover={{ y: -5 }}
       whileTap={{ scale: 0.98 }}
       className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden cursor-pointer h-80 flex flex-col"
-      onClick={() => window.open(url, "_blank")}
+      onClick={handleProjectClick}
     >
       <div className="p-6 flex-1 flex flex-col">
         <div className="flex items-start justify-between mb-4">
@@ -38,19 +76,13 @@ const ProjectCard = ({ name, description, language, topics, url, githubUrl }: Pr
           </h3>
           <div className="flex gap-2">
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(githubUrl, "_blank");
-              }}
+              onClick={handleGithubClick}
               className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <Github size={18} />
             </button>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                window.open(url, "_blank");
-              }}
+              onClick={handleExternalClick}
               className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
               <ExternalLink size={18} />
