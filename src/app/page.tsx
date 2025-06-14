@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Sidebar from "@/components/sidebar/sidebar";
 import ProjectCard from "@/components/projects/project-card";
 import ContactModal from "@/components/contact/contact-modal";
@@ -77,44 +78,67 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="mb-16"
           >
-            <div className="max-w-4xl">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6"
-              >
-                Hi, I&apos;m Albert! 👋
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
-              >
-                I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions 
-                that make a positive impact. I love building applications that solve real-world 
-                problems and connecting technology with meaningful purposes.
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="flex flex-wrap gap-4"
-              >
-                <a
-                  href="#projects"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+            <div className="max-w-6xl">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6"
+                  >
+                    Hi, I&apos;m Albert! 👋
+                  </motion.h1>
+                  <motion.p
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
+                  >
+                    I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions 
+                    that make a positive impact. I love building applications that solve real-world 
+                    problems and connecting technology with meaningful purposes.
+                  </motion.p>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                    className="flex flex-wrap gap-4"
+                  >
+                    <a
+                      href="#projects"
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+                    >
+                      View My Work
+                    </a>
+                    <button
+                      onClick={() => handleContactClick('hero_section')}
+                      className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors"
+                    >
+                      Get In Touch
+                    </button>
+                  </motion.div>
+                </div>
+                
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="flex justify-center lg:justify-end"
                 >
-                  View My Work
-                </a>
-                <button
-                  onClick={() => handleContactClick('hero_section')}
-                  className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors"
-                >
-                  Get In Touch
-                </button>
-              </motion.div>
+                  <div className="relative">
+                    <Image
+                      src="/keona.jpeg"
+                      alt="Albert Shih - Software Engineer"
+                      width={400}
+                      height={400}
+                      className="rounded-2xl shadow-2xl object-cover"
+                      priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
+                  </div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
 
