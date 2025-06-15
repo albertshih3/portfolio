@@ -128,7 +128,7 @@ export default function Home() {
                 >
                   <div className="relative">
                     <Image
-                      src="/keona.jpeg"
+                      src="/mainphoto.jpeg"
                       alt="Albert Shih - Software Engineer"
                       width={400}
                       height={400}
