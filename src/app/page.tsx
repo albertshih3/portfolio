@@ -1,15 +1,26 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import type { FC } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+type Project = {
+  name: string;
+  description: string;
+  language: string;
+  topics: string[];
+  url: string;
+  githubUrl: string;
+};
+
 import Image from "next/image";
 import Sidebar from "@/components/sidebar/sidebar";
 import ProjectCard from "@/components/projects/project-card";
 import ContactModal from "@/components/contact/contact-modal";
+import ChatBar from "@/components/chat/chat-bar";
 import { analytics } from "@/lib/firebase";
 import { logEvent } from "firebase/analytics";
 
-const projects = [
+const personalProjects = [
   {
     name: "CropSwap",
     description: "HackMerced IX submission! Winner of Best Use of Auth0 by Okta! A platform connecting farmers with surplus crops to reduce food waste.",
@@ -27,6 +38,17 @@ const projects = [
     githubUrl: "https://github.com/albertshih3/How-Are-You"
   },
   {
+    name: "Merced Meals",
+    description: "CSE 108 Final Project @ UC Merced - A meal planning and nutrition tracking application for students.",
+    language: "Python",
+    topics: ["python", "meal-planning", "nutrition", "university"],
+    url: "https://github.com/albertshih3/merced-meals",
+    githubUrl: "https://github.com/albertshih3/merced-meals"
+  }
+];
+
+const workProjects = [
+  {
     name: "Oz Empathy App",
     description: "Oakland Zoo Empathy Guide mobile app, for internal staff use to enhance visitor experiences and animal care.",
     language: "TypeScript",
@@ -41,19 +63,65 @@ const projects = [
     topics: ["transportation", "schedule", "university", "javascript"],
     url: "https://github.com/albertshih3/CatTracksXM",
     githubUrl: "https://github.com/albertshih3/CatTracksXM"
-  },
-  {
-    name: "Merced Meals",
-    description: "CSE 108 Final Project @ UC Merced - A meal planning and nutrition tracking application for students.",
-    language: "Python",
-    topics: ["python", "meal-planning", "nutrition", "university"],
-    url: "https://github.com/albertshih3/merced-meals",
-    githubUrl: "https://github.com/albertshih3/merced-meals"
   }
 ];
 
+const academicProjects: Project[] = [
+];
+
+// Tabs component defined before Home component to avoid hoisting issues
+interface TabsProps {
+  personalProjects: Project[];
+  academicProjects: Project[];
+  ProjectCard: FC<Project>;
+}
+
+const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }) => {
+  const [activeTab, setActiveTab] = useState<"personal" | "academic">("personal");
+  
+  return (
+    <div>
+      <div className="flex mb-6">
+        <button
+          className={`px-4 py-2 rounded-t-lg font-medium focus:outline-none transition-colors ${activeTab === "personal" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"}`}
+          onClick={() => setActiveTab("personal")}
+        >
+          Personal Projects
+        </button>
+        <button
+          className={`ml-2 px-4 py-2 rounded-t-lg font-medium focus:outline-none transition-colors ${activeTab === "academic" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"}`}
+          onClick={() => setActiveTab("academic")}
+        >
+          Academic Projects
+        </button>
+      </div>
+      <div className="min-h-[200px]">
+        {activeTab === "personal" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {personalProjects.map((project: Project) => (
+              <div key={project.name}>
+                <ProjectCard {...project} />
+              </div>
+            ))}
+          </div>
+        )}
+        {activeTab === "academic" && (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {academicProjects.map((project: Project) => (
+              <div key={project.name}>
+                <ProjectCard {...project} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 export default function Home() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleContactClick = (source: string) => {
     // Track contact button clicks
@@ -68,7 +136,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar onContactClick={() => handleContactClick('sidebar')} />
-      
+
       <main className="lg:ml-72">
         <div className="pt-16 px-8 pb-8">
           {/* Hero Section */}
@@ -95,8 +163,8 @@ export default function Home() {
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
                   >
-                    I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions 
-                    that make a positive impact. I love building applications that solve real-world 
+                    I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions
+                    that make a positive impact. I love building applications that solve real-world
                     problems and connecting technology with meaningful purposes.
                   </motion.p>
                   <motion.div
@@ -105,21 +173,21 @@ export default function Home() {
                     transition={{ duration: 0.6, delay: 0.3 }}
                     className="flex flex-wrap gap-4"
                   >
-                    <a
-                      href="#projects"
-                      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-                    >
-                      View My Work
-                    </a>
-                    <button
-                      onClick={() => handleContactClick('hero_section')}
-                      className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors"
-                    >
-                      Get In Touch
-                    </button>
-                  </motion.div>
-                </div>
-                
+    <a
+      href="#projects"
+      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
+    >
+      View My Work
+    </a>
+    <button
+      onClick={() => handleContactClick('hero_section')}
+      className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors"
+    >
+      Get In Touch
+    </button>
+  </motion.div>
+</div>
+
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -142,25 +210,23 @@ export default function Home() {
             </div>
           </motion.div>
 
-          {/* Projects Section */}
+          {/* Work Samples Section (now at the top) */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            id="projects"
             className="mb-16"
           >
             <div className="mb-12">
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Featured Projects
+                Work Samples
               </h2>
               <p className="text-lg text-gray-600 dark:text-gray-300">
-                Here are some of the projects I&apos;ve worked on that showcase my skills and interests.
+                A selection of work projects. More coming soon!
               </p>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {projects.map((project, index) => (
+              {workProjects.map((project, index) => (
                 <motion.div
                   key={project.name}
                   initial={{ opacity: 0, y: 20 }}
@@ -171,6 +237,25 @@ export default function Home() {
                 </motion.div>
               ))}
             </div>
+          </motion.section>
+
+          {/* Tabbed Personal/Academic Projects Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mb-16"
+            id="projects"
+          >
+            <div className="mb-12">
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                Projects
+              </h2>
+              <p className="text-lg text-gray-600 dark:text-gray-300">
+                Browse my personal and academic projects below.
+              </p>
+            </div>
+            <Tabs personalProjects={personalProjects} academicProjects={academicProjects} ProjectCard={ProjectCard} />
           </motion.section>
 
           {/* CTA Section */}
@@ -184,7 +269,7 @@ export default function Home() {
               Let&apos;s Work Together
             </h2>
             <p className="text-lg mb-8 opacity-90">
-              I&apos;m always interested in new opportunities and collaborations. 
+              I&apos;m always interested in new opportunities and collaborations.
               Feel free to reach out if you&apos;d like to connect!
             </p>
             <button
@@ -198,10 +283,13 @@ export default function Home() {
       </main>
 
       {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
+
+      {/* Chat Bar */}
+      <ChatBar isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
     </div>
   );
 }
