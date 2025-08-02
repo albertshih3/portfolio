@@ -594,17 +594,27 @@ Computer vision opens doors to countless applications. Start with these foundati
 ];
 
 interface BlogPostPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default function BlogPost({ params }: BlogPostPageProps) {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [post, setPost] = useState<typeof blogPosts[0] | null>(null);
+  const [slug, setSlug] = useState<string>('');
 
   useEffect(() => {
-    const foundPost = blogPosts.find(p => p.id === params.slug);
+    // Resolve the params promise and set the slug
+    params.then(({ slug: resolvedSlug }) => {
+      setSlug(resolvedSlug);
+    });
+  }, [params]);
+
+  useEffect(() => {
+    if (!slug) return;
+    
+    const foundPost = blogPosts.find(p => p.id === slug);
     if (foundPost) {
       setPost(foundPost);
       // Track blog post view
@@ -615,7 +625,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
         });
       }
     }
-  }, [params.slug]);
+  }, [slug]);
 
   const handleContactClick = (source: string) => {
     if (analytics) {
