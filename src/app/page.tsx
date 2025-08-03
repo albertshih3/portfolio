@@ -15,6 +15,7 @@ type Project = {
 import Image from "next/image";
 import Sidebar from "@/components/sidebar/sidebar";
 import ProjectCard from "@/components/projects/project-card";
+import ProjectDetailModal from "@/components/projects/project-detail-modal";
 import ContactModal from "@/components/contact/contact-modal";
 import ChatBar from "@/components/chat/chat-bar";
 import { analytics } from "@/lib/firebase";
@@ -49,11 +50,19 @@ const personalProjects = [
 
 const workProjects = [
   {
-    name: "Oz Empathy App",
-    description: "Oakland Zoo Empathy Guide mobile app, for internal staff use to enhance visitor experiences and animal care.",
+    name: "Empathy Guide App",
+    description: "Oakland Zoo Empathy Guide mobile app, for internal staff use to enhance visitor experiences.",
     language: "TypeScript",
-    topics: ["mobile-app", "zoo", "empathy", "staff-tools"],
+    topics: ["React Native", "Google Cloud Platform", "Firebase", "Swift", "Kotlin"],
     url: "https://github.com/albertshih3/oz-empathy-app",
+    githubUrl: "https://github.com/albertshih3/oz-empathy-app"
+  },
+  {
+    name: "Booster Pack Generator",
+    description: "Internal staff tool for Oakland Zoo's Learning & Engagement team. Generates custom booster packs for sales.",
+    language: "TypeScript",
+    topics: ["React", "Vite", "Google Cloud Platform", "Firebase", "Vercel"],
+    url: "https://ozboosterpacks.albertshih.org",
     githubUrl: "https://github.com/albertshih3/oz-empathy-app"
   },
   {
@@ -61,7 +70,7 @@ const workProjects = [
     description: "Bus schedule module created for the Transportation and Parking Department at UC Merced to improve campus transportation.",
     language: "JavaScript",
     topics: ["transportation", "schedule", "university", "javascript"],
-    url: "https://github.com/albertshih3/CatTracksXM",
+    url: "https:/connect.ucmerced.edu",
     githubUrl: "https://github.com/albertshih3/CatTracksXM"
   }
 ];
@@ -73,10 +82,11 @@ const academicProjects: Project[] = [
 interface TabsProps {
   personalProjects: Project[];
   academicProjects: Project[];
-  ProjectCard: FC<Project>;
+  ProjectCard: FC<Project & { onProjectClick?: () => void }>;
+  onProjectClick: (project: Project) => void;
 }
 
-const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }) => {
+const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard, onProjectClick }) => {
   const [activeTab, setActiveTab] = useState<"personal" | "academic">("personal");
   
   return (
@@ -100,7 +110,7 @@ const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {personalProjects.map((project: Project) => (
               <div key={project.name}>
-                <ProjectCard {...project} />
+                <ProjectCard {...project} onProjectClick={() => onProjectClick(project)} />
               </div>
             ))}
           </div>
@@ -109,7 +119,7 @@ const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {academicProjects.map((project: Project) => (
               <div key={project.name}>
-                <ProjectCard {...project} />
+                <ProjectCard {...project} onProjectClick={() => onProjectClick(project)} />
               </div>
             ))}
           </div>
@@ -122,6 +132,8 @@ const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }
 export default function Home() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
   const handleContactClick = (source: string) => {
     // Track contact button clicks
@@ -131,6 +143,11 @@ export default function Home() {
       });
     }
     setIsContactModalOpen(true);
+  };
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+    setIsProjectModalOpen(true);
   };
 
   return (
@@ -197,7 +214,7 @@ export default function Home() {
                   <div className="relative">
                     <Image
                       src="/mainphoto.jpeg"
-                      alt="Albert Shih - Software Engineer"
+                      alt="Albert Shih - Forward Deployed Engineer"
                       width={400}
                       height={400}
                       className="rounded-2xl shadow-2xl object-cover"
@@ -221,9 +238,6 @@ export default function Home() {
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 Work Samples
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                A selection of work projects. More coming soon!
-              </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {workProjects.map((project, index) => (
@@ -233,7 +247,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
                 >
-                  <ProjectCard {...project} />
+                  <ProjectCard {...project} onProjectClick={() => handleProjectClick(project)} />
                 </motion.div>
               ))}
             </div>
@@ -255,7 +269,7 @@ export default function Home() {
                 Browse my personal and academic projects below.
               </p>
             </div>
-            <Tabs personalProjects={personalProjects} academicProjects={academicProjects} ProjectCard={ProjectCard} />
+            <Tabs personalProjects={personalProjects} academicProjects={academicProjects} ProjectCard={ProjectCard} onProjectClick={handleProjectClick} />
           </motion.section>
 
           {/* CTA Section */}
@@ -286,6 +300,13 @@ export default function Home() {
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
+      />
+
+      {/* Project Detail Modal */}
+      <ProjectDetailModal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+        project={selectedProject}
       />
 
       {/* Chat Bar */}

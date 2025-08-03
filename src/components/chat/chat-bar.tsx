@@ -40,13 +40,9 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
     "Ask a question... \"What's Albert's background?\""
   ];
 
-  console.log('ChatBar render - isOpen:', isOpen, 'messages length:', messages.length);
-
   const handleCloseChat = () => {
-    console.log('handleCloseChat called, current isOpen:', isOpen);
     setUserClosedChat(true);
     setIsOpen(false);
-    console.log('setIsOpen(false) called');
   };
 
   const scrollToBottom = () => {
