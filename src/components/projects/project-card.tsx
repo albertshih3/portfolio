@@ -12,9 +12,10 @@ interface ProjectCardProps {
   topics: string[];
   url: string;
   githubUrl: string;
+  onProjectClick?: () => void;
 }
 
-const ProjectCard = ({ name, description, language, topics, url, githubUrl }: ProjectCardProps) => {
+const ProjectCard = ({ name, description, language, topics, url, githubUrl, onProjectClick }: ProjectCardProps) => {
   const languageColors: { [key: string]: string } = {
     JavaScript: "bg-yellow-500",
     TypeScript: "bg-blue-500",
@@ -35,7 +36,13 @@ const ProjectCard = ({ name, description, language, topics, url, githubUrl }: Pr
         click_type: 'main_card'
       });
     }
-    window.open(url, "_blank");
+    
+    // Use the callback if provided, otherwise open URL
+    if (onProjectClick) {
+      onProjectClick();
+    } else {
+      window.open(url, "_blank");
+    }
   };
 
   const handleGithubClick = (e: React.MouseEvent) => {

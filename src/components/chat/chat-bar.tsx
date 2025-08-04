@@ -40,13 +40,9 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
     "Ask a question... \"What's Albert's background?\""
   ];
 
-  console.log('ChatBar render - isOpen:', isOpen, 'messages length:', messages.length);
-
   const handleCloseChat = () => {
-    console.log('handleCloseChat called, current isOpen:', isOpen);
     setUserClosedChat(true);
     setIsOpen(false);
-    console.log('setIsOpen(false) called');
   };
 
   const scrollToBottom = () => {
@@ -221,7 +217,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
       <AnimatePresence>
         {isOpen && (
           <div
-            className="fixed bottom-16 right-6 w-96 h-[550px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl flex flex-col z-[100] overflow-hidden"
+            className="fixed bottom-24 sm:bottom-20 md:bottom-16 right-2 sm:right-4 md:right-6 w-[95vw] sm:w-96 h-[70vh] sm:h-[550px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl flex flex-col z-[100] overflow-hidden"
             style={{ 
               animation: 'fadeIn 0.2s ease-out'
             }}

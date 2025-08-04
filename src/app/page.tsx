@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import type { FC } from "react";
+
 import { AnimatePresence, motion } from "framer-motion";
+import projectsData from "@/data/projects.json";
 type Project = {
   name: string;
   description: string;
@@ -10,73 +12,35 @@ type Project = {
   topics: string[];
   url: string;
   githubUrl: string;
+  overview?: string;
+  myRole?: string;
+  features?: string[];
+  challenges?: string;
+  learnings?: string;
 };
 
 import Image from "next/image";
 import Sidebar from "@/components/sidebar/sidebar";
 import ProjectCard from "@/components/projects/project-card";
+import ProjectDetailModal from "@/components/projects/project-detail-modal";
 import ContactModal from "@/components/contact/contact-modal";
 import ChatBar from "@/components/chat/chat-bar";
 import { analytics } from "@/lib/firebase";
 import { logEvent } from "firebase/analytics";
 
-const personalProjects = [
-  {
-    name: "CropSwap",
-    description: "HackMerced IX submission! Winner of Best Use of Auth0 by Okta! A platform connecting farmers with surplus crops to reduce food waste.",
-    language: "JavaScript",
-    topics: ["auth0", "hackathon", "javascript", "mongodb", "react"],
-    url: "https://github.com/albertshih3/CropSwap",
-    githubUrl: "https://github.com/albertshih3/CropSwap"
-  },
-  {
-    name: "How-Are-You",
-    description: "A mental health focused web app designed by a college student for college students, providing resources and support.",
-    language: "TypeScript",
-    topics: ["mental-health", "web-app", "typescript", "react"],
-    url: "https://github.com/albertshih3/How-Are-You",
-    githubUrl: "https://github.com/albertshih3/How-Are-You"
-  },
-  {
-    name: "Merced Meals",
-    description: "CSE 108 Final Project @ UC Merced - A meal planning and nutrition tracking application for students.",
-    language: "Python",
-    topics: ["python", "meal-planning", "nutrition", "university"],
-    url: "https://github.com/albertshih3/merced-meals",
-    githubUrl: "https://github.com/albertshih3/merced-meals"
-  }
-];
-
-const workProjects = [
-  {
-    name: "Oz Empathy App",
-    description: "Oakland Zoo Empathy Guide mobile app, for internal staff use to enhance visitor experiences and animal care.",
-    language: "TypeScript",
-    topics: ["mobile-app", "zoo", "empathy", "staff-tools"],
-    url: "https://github.com/albertshih3/oz-empathy-app",
-    githubUrl: "https://github.com/albertshih3/oz-empathy-app"
-  },
-  {
-    name: "CatTracksXM",
-    description: "Bus schedule module created for the Transportation and Parking Department at UC Merced to improve campus transportation.",
-    language: "JavaScript",
-    topics: ["transportation", "schedule", "university", "javascript"],
-    url: "https://github.com/albertshih3/CatTracksXM",
-    githubUrl: "https://github.com/albertshih3/CatTracksXM"
-  }
-];
-
-const academicProjects: Project[] = [
-];
+const personalProjects: Project[] = projectsData.personalProjects;
+const workProjects: Project[] = projectsData.workProjects;
+const academicProjects: Project[] = projectsData.academicProjects || [];
 
 // Tabs component defined before Home component to avoid hoisting issues
 interface TabsProps {
   personalProjects: Project[];
   academicProjects: Project[];
-  ProjectCard: FC<Project>;
+  ProjectCard: FC<Project & { onProjectClick?: () => void }>;
+  onProjectClick: (project: Project) => void;
 }
 
-const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }) => {
+const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard, onProjectClick }) => {
   const [activeTab, setActiveTab] = useState<"personal" | "academic">("personal");
   
   return (
@@ -100,7 +64,7 @@ const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {personalProjects.map((project: Project) => (
               <div key={project.name}>
-                <ProjectCard {...project} />
+                <ProjectCard {...project} onProjectClick={() => onProjectClick(project)} />
               </div>
             ))}
           </div>
@@ -109,7 +73,7 @@ const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {academicProjects.map((project: Project) => (
               <div key={project.name}>
-                <ProjectCard {...project} />
+                <ProjectCard {...project} onProjectClick={() => onProjectClick(project)} />
               </div>
             ))}
           </div>
@@ -122,6 +86,8 @@ const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard }
 export default function Home() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
   const handleContactClick = (source: string) => {
     // Track contact button clicks
@@ -131,6 +97,11 @@ export default function Home() {
       });
     }
     setIsContactModalOpen(true);
+  };
+
+  const handleProjectClick = (project: Project) => {
+    setSelectedProject(project);
+    setIsProjectModalOpen(true);
   };
 
   return (
@@ -157,16 +128,14 @@ export default function Home() {
                   >
                     Hi, I&apos;m Albert! 👋
                   </motion.h1>
-                  <motion.p
+                    <motion.p
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                     className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
-                  >
-                    I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions
-                    that make a positive impact. I love building applications that solve real-world
-                    problems and connecting technology with meaningful purposes.
-                  </motion.p>
+                    >
+                    I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions that make a positive impact. As an AI Native developer, I have extensive experience leveraging AI tools to achieve ambitious goals and accelerate development. I love building applications that solve real-world problems and connecting technology with meaningful purposes.
+                    </motion.p>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -197,7 +166,7 @@ export default function Home() {
                   <div className="relative">
                     <Image
                       src="/mainphoto.jpeg"
-                      alt="Albert Shih - Software Engineer"
+                      alt="Albert Shih - Forward Deployed Engineer"
                       width={400}
                       height={400}
                       className="rounded-2xl shadow-2xl object-cover"
@@ -221,9 +190,6 @@ export default function Home() {
               <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 Work Samples
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                A selection of work projects. More coming soon!
-              </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {workProjects.map((project, index) => (
@@ -233,7 +199,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
                 >
-                  <ProjectCard {...project} />
+                  <ProjectCard {...project} onProjectClick={() => handleProjectClick(project)} />
                 </motion.div>
               ))}
             </div>
@@ -255,7 +221,7 @@ export default function Home() {
                 Browse my personal and academic projects below.
               </p>
             </div>
-            <Tabs personalProjects={personalProjects} academicProjects={academicProjects} ProjectCard={ProjectCard} />
+            <Tabs personalProjects={personalProjects} academicProjects={academicProjects} ProjectCard={ProjectCard} onProjectClick={handleProjectClick} />
           </motion.section>
 
           {/* CTA Section */}
@@ -286,6 +252,13 @@ export default function Home() {
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
+      />
+
+      {/* Project Detail Modal */}
+      <ProjectDetailModal
+        isOpen={isProjectModalOpen}
+        onClose={() => setIsProjectModalOpen(false)}
+        project={selectedProject}
       />
 
       {/* Chat Bar */}

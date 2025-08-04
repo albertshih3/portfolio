@@ -43,7 +43,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
   const socialLinks = [
     { name: "GitHub", icon: Github, href: "https://github.com/albertshih3" },
     { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com/in/albertshih3" },
-    { name: "Resume", icon: ExternalLink, href: "https://firebasestorage.googleapis.com/v0/b/portfolio-c973b.firebasestorage.app/o/resumes%2FResume.pdf?alt=media&token=160f41c0-7f08-43f4-b0a6-637eba12f03a" },
+    { name: "Resume", icon: ExternalLink, href: "https://storage.cloud.google.com/portfolio-c973b.firebasestorage.app/resumes/AI_Native_Resume.pdf?authuser=1" },
   ];
 
   return (
@@ -84,7 +84,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Albert Shih</h2>
             <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              Software Engineer
+              Forward Deployed Engineer
             </p>
           </div>
 
@@ -169,7 +169,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Albert Shih</h2>
             <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              Software Engineer
+              Forward Deployed Engineer
             </p>
           </div>
 
