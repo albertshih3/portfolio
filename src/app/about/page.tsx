@@ -130,7 +130,7 @@ export default function About() {
                     Get In Touch
                   </button>
                   <a
-                    href="https://firebasestorage.googleapis.com/v0/b/portfolio-c973b.firebasestorage.app/o/resumes%2FResume.pdf?alt=media&token=160f41c0-7f08-43f4-b0a6-637eba12f03a"
+                    href="https://storage.cloud.google.com/portfolio-c973b.firebasestorage.app/resumes/AI_Native_Resume.pdf?authuser=1"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-6 py-3 rounded-lg font-medium transition-colors"
