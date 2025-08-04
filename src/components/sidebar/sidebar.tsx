@@ -169,7 +169,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
             </div>
             <h2 className="text-xl font-bold text-gray-900 dark:text-white">Albert Shih</h2>
             <p className="text-gray-600 dark:text-gray-400 text-center text-sm">
-              Software Engineer
+              Forward Deployed Engineer
             </p>
           </div>
 
