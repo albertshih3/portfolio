@@ -1,0 +1,160 @@
+{
+    "personalProjects": [
+        {
+            "name": "CropSwap",
+            "description": "HackMerced IX submission! Winner of Best Use of Auth0 by Okta! A platform connecting farmers with surplus crops to reduce food waste.",
+            "language": "JavaScript",
+            "topics": [
+                "auth0",
+                "hackathon",
+                "javascript",
+                "mongodb",
+                "react"
+            ],
+            "url": "https://github.com/albertshih3/CropSwap",
+            "githubUrl": "https://github.com/albertshih3/CropSwap",
+            "overview": "CropSwap is a platform designed to connect farmers with surplus crops to those in need, reducing food waste and promoting sustainability. The app allows farmers to list their surplus produce, while users can browse available items and arrange pickups or deliveries. It aims to create a community-driven solution to food waste by facilitating direct connections between producers and consumers.",
+            "myRole": "Team lead responsible for architecture, design, and implementation of the web app. Collaborated with team members to develop features and ensure a smooth user experience.",
+            "features": [
+                "User authentication and authorization using Auth0",
+                "Real-time chat functionality for users to connect",
+                "Responsive design for mobile and desktop use",
+                "Custom user profiles for farmers and consumers"
+            ],
+            "challenges": "As this was my first hackathon, I faced challenges in coordinating with team members and managing time effectively. We tried to tackle learning a lot of new technologies and frameworks in a short period, which led to a shortage of time for testing and debugging.",
+            "learnings": "Gained experience in rapid application development, team collaboration under time constraints. Learned how to effectively use Auth0 for secure authentication and authorization in web applications."
+        },
+        {
+            "name": "How-Are-You",
+            "description": "A mental health focused web app designed by a college student for college students, providing resources and support.",
+            "language": "TypeScript",
+            "topics": [
+                "mental-health",
+                "web-app",
+                "typescript",
+                "react"
+            ],
+            "url": "https://github.com/albertshih3/How-Are-You",
+            "githubUrl": "https://github.com/albertshih3/How-Are-You",
+            "overview": "How Are You is a mental health focused web app designed by a college student for college students. It provides resources and support for mental health, including articles, self-care tips, and a community forum. The app aims to create a safe space for students to share their experiences and seek help.",
+            "myRole": "Lead developer responsible for architecture, design, and implementation of the web app. Collaborated with mental health professionals to ensure the app provided accurate and helpful resources.",
+            "features": [
+                "The app is still in development",
+                "Resource library with articles and self-care tips",
+                "Community forum for students to share experiences",
+                "Anonymous Q&A section for peer support",
+                "User-friendly interface designed for college students",
+                "Responsive design for mobile and desktop use"
+            ],
+            "challenges": "Building a community-focused platform that encourages open discussion about mental health while ensuring user privacy and safety. Designing an intuitive user interface that appeals to college students and meets their needs.",
+            "learnings": "Gained experience in building community-driven web applications, user-centered design, and the importance of mental health awareness among college students. Learned how to create a supportive online environment that fosters open communication."
+        }
+    ],
+    "workProjects": [
+        {
+            "name": "Empathy Guide App",
+            "description": "Oakland Zoo Empathy Guide mobile app, for internal staff use to enhance visitor experiences.",
+            "language": "TypeScript",
+            "topics": [
+                "React Native",
+                "Google Cloud Platform",
+                "Firebase",
+                "Expo",
+                "Swift",
+                "Kotlin"
+            ],
+            "url": "https://github.com/albertshih3/oz-empathy-app",
+            "githubUrl": "https://github.com/albertshih3/oz-empathy-app",
+            "overview": "At the Oakland Zoo, one of the primary goals of the Learning & Engagement team is to help build empathy for animals in our care. However, it can be hard to do without the proper information. Previously, we relied on an outdated Google Site to access all our information, which was difficult to use on mobile devices and unreliable due to limited internet connectivity. My app solves this by providing a modern, offline-capable digital tool that allows staff to view detailed animal profiles, including age, diet, and other species information. Additionally, the app leverages AI to generate conversation starters, helping staff engage visitors and foster meaningful discussions about animal welfare in real time. (And yes, AI responses are cached so they work offline too!)",
+            "myRole": "Lead developer responsible for architecture, design, and implementation of the mobile app. Collaborated closely with the Learning & Engagement team to gather requirements and ensure the app met their needs.",
+            "features": [
+                "Offline-first architecture for reliable use in areas with limited connectivity",
+                "Detailed animal profiles including age, diet, and species information",
+                "AI-powered conversation starter generation for staff-visitor engagement",
+                "Caching of AI responses for offline use",
+                "Role-based access and secure authentication",
+                "User profiles with favorites and personalized content"
+            ],
+            "challenges": "Designing a robust offline data sync system that gracefully handles conflicts and intermittent connectivity was a major technical challenge. Ensuring the UI was intuitive for non-technical staff required extensive user testing and iteration.",
+            "learnings": "Gained deep experience in offline-first mobile architecture, user-centered design for field staff, and advanced Firebase/Firestore data modeling. Learned the importance of iterative feedback from real users in mission-critical environments."
+        },
+        {
+            "name": "Booster Pack Generator",
+            "description": "Internal staff tool for Oakland Zoo's Learning & Engagement team. Generates custom booster packs for sales.",
+            "language": "TypeScript",
+            "topics": [
+                "React",
+                "Vite",
+                "Google Cloud Platform",
+                "Firebase",
+                "Vercel"
+            ],
+            "url": "https://ozboosterpacks.albertshih.org",
+            "githubUrl": "https://github.com/albertshih3/oz-card-randomizer",
+            "overview": "The Oakland Zoo has a robust trading card program that allows visitors to collect cards featuring different animals. To generate revenue for the department and engage visitors, the Learning & Engagement team sells booster packs containing random cards. Before my app, staff had to manually create spreadsheets by hand, looking up each card number and name and generating a spreadsheet of card packs for staff to assemble. This took countless hours and was prone to human error. My app automates this process, allowing staff to quickly generate packs with just a few clicks, ensuring accuracy and saving time.",
+            "myRole": "Lead developer responsible for architecture, design, and implementation of the web app. Worked closely with the Learning & Engagement team to understand their needs and ensure the app streamlined their workflow.",
+            "features": [
+                "Intuitive web interface for staff to generate booster packs",
+                "Randomized card selection with customizable pack sizes",
+                "Automated spreadsheet generation with multiple packs for batch processing",
+                "Secure authentication and role-based access control",
+                "Real-time updates and error handling",
+                "Card adminstration features for managing card data",
+                "Detailed analytics on pack generation and usage",
+                "Responsive design for use on tablets and phones"
+            ],
+            "challenges": "Ensuring the randomization algorithm produced fair and balanced packs while also allowing for customization was a key challenge. Additionally, creating card management features that were intuitive for non-technical staff required careful design and user testing.",
+            "learnings": "Gained extensive experience in building user-friendly web applications with complex data requirements. Learned how to balance technical constraints with user needs, and the importance of thorough testing in mission-critical applications."
+            
+        },
+        {
+            "name": "CatTracksXM",
+            "description": "Bus schedule module created for the Transportation and Parking Department at UC Merced to improve campus transportation.",
+            "language": "JavaScript",
+            "topics": [
+                "React",
+                "Modo Labs",
+                "UC Merced Connect",
+                "AWS"
+            ],
+            "url": "https:/connect.ucmerced.edu",
+            "githubUrl": "https://github.com/albertshih3/CatTracksXM-AWS",
+            "overview": "CatTracksXM is a bus schedule module created for the Transportation and Parking Department at UC Merced, in partnership with the UC Merced Office of Informaton Technology and Modo Labs. It provides students with real-time bus schedules, route information, and service alerts to improve campus transportation. It also features an in-depth route planner. The module integrates with the existing Campus app platform, UC Merced Connect and is designed to be user-friendly and accessible on both mobile and desktop devices.",
+            "myRole": "Lead Developer and Project Manager. Oversaw the development process, coordinated with university stakeholders, and ensured the module met user needs.",
+            "features": [
+                "Real-time bus schedules and route information",
+                "In-depth route planner with multiple options",
+                "User-friendly interface designed for both mobile and desktop",
+                "Integration with UC Merced Connect app platform",
+                "Accessibility features for diverse user needs"
+            ],
+            "challenges": "Managing the different times for bus schedules and ensuring the module was responsive and accessible across devices were significant challenges. Coordinating with multiple university departments as well as the broader campus community to gather requirements and feedback also required careful project management.",
+            "learnings": "Gained valuable experience in project management and user-centered design. Learned how to effectively collaborate with diverse stakeholders in a university setting and the importance of thorough testing and iteration based on user feedback."
+        }
+    ],
+    "academicProjects": [
+        {
+            "name": "Merced Meals",
+            "description": "CSE 108 Final Project @ UC Merced - A dining center meal rating platform for students.",
+            "language": "Python",
+            "topics": [
+                "Python",
+                "JavaScript",
+                "Flask"
+            ],
+            "url": "https://github.com/albertshih3/merced-meals",
+            "githubUrl": "https://github.com/albertshih3/merced-meals",
+            "overview": "A platform for students to rate and review meals at UC Merced's dining centers. The project was developed as part of the CSE 108 course, focusing on web development and database management. It allows students to share their dining experiences by uploading images of food served at dining centers on campus and allows users to leave comments and ratings on the food. The platform is built using Python with Flask for the backend and JavaScript (React) for the frontend.",
+            "myRole": "Group leader responsible for coordinating the project, designing the database schema, and implementing the backend API using Flask. Worked closely with team members to develop the frontend using React.",
+            "features": [
+                "User authentication and profiles",
+                "Meal rating and review system",
+                "Image upload functionality for food photos",
+                "Search and filter options for meals",
+                "Responsive design for mobile and desktop use"
+            ],
+            "challenges": "Hosting the application on PythonAnywhere presented challenges with database management and performance. While the application ran well on local devices, it was a challenge getting the database to host properly on the cloud platform.",
+            "learnings": "Gained experience in full-stack web development, including backend API design, frontend development with React, and database management. Learned how to deploy applications on cloud platforms and the importance of performance optimization."
+        }
+    ]
+}

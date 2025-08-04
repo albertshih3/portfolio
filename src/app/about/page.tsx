@@ -18,6 +18,7 @@ import {
 import Sidebar from "@/components/sidebar/sidebar";
 import { useState } from "react";
 import ContactModal from "@/components/contact/contact-modal";
+import ChatBar from "@/components/chat/chat-bar";
 import { analytics } from "@/lib/firebase";
 import { logEvent } from "firebase/analytics";
 
@@ -75,8 +76,10 @@ const projects = [
   }
 ];
 
+
 export default function About() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleContactClick = (source: string) => {
     if (analytics) {
@@ -318,11 +321,11 @@ export default function About() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {projects.map((project, index) => (
                 <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
-                  <div className="flex items-start justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{project.title}</h3>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
+                  <div className="mb-4">
+                    <div className="text-green-800 dark:text-green-200 font-extrabold uppercase tracking-wide text-base mb-1">
                       {project.type}
-                    </span>
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{project.title}</h3>
                   </div>
                   
                   <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
@@ -394,6 +397,9 @@ export default function About() {
         isOpen={isContactModalOpen} 
         onClose={() => setIsContactModalOpen(false)} 
       />
+
+      {/* Chat Bar */}
+      <ChatBar isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
     </div>
   );
 }
