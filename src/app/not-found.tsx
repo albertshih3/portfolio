@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button, Card, Spacer } from "@heroui/react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const NotFoundPage = () => {
   const router = useRouter();

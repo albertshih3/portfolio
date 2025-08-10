@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { X, Mail, User, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
 import { analytics } from "@/lib/firebase";

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "motion/react";
 import { Send, MessageCircle, ChevronDown } from "lucide-react";
 import ReactMarkdown from 'react-markdown';
 
