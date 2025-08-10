@@ -9,16 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.5",
     "@google/genai": "^1.12.0",
-    "@mui/material": "^5.15.15",
-    "@nextui-org/react": "^2.3.5",
+    "@heroui/react": "^2.3.5",
     "@tailwindcss/typography": "^0.5.16",
     "firebase": "^11.9.1",
-    "framer-motion": "^11.1.7",
     "lucide-react": "^0.378.0",
-    "mime": "^4.0.7",
     "motion": "^12.23.12",
     "next": "^15.4.5",
     "next-themes": "^0.3.0",

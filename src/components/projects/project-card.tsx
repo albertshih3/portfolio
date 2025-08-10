@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { ExternalLink, Github } from "lucide-react";
 import { analytics } from "@/lib/firebase";
 import { logEvent } from "firebase/analytics";

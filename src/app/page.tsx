@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { FC } from "react";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import projectsData from "@/data/projects.json";
 type Project = {
   name: string;

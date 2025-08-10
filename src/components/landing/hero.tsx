@@ -1,7 +1,7 @@
 // hero component for the landing page
 
-import { Button, Spacer, Image } from "@nextui-org/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Button, Spacer, Image } from "@heroui/react";
+import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 
 const Hero = () => {
