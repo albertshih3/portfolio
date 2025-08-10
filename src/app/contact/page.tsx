@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Input, Textarea, Button, Card, Spacer } from "@nextui-org/react";
+import { Input, Textarea, Button, Card, Spacer } from "@heroui/react";
 import { toast } from "sonner";
 
 export default function Contact() {
