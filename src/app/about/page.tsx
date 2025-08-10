@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { 
-  Code, 
-  Brain, 
-  Cloud, 
-  Database, 
-  Users, 
+import {
+  Code,
+  Brain,
+  Cloud,
+  Database,
+  Users,
   GraduationCap,
   Calendar,
   MapPin,
@@ -43,6 +43,19 @@ const experiences = [
       "Trained and mentored a team of 7 student employees over a 2-year period, enhancing team capabilities and service delivery for campus-wide IT initiatives",
       "Managed and executed IT communications, including content strategy and maintenance for the official IT website and UC Merced Connect mobile application",
       "Led outreach efforts to communicate IT services and updates to the campus community, fostering better understanding and adoption of key technology resources"
+    ]
+  },
+  {
+    title: "SEED 2023 Internship",
+    company: "Modo Labs",
+    location: "Remote",
+    period: "June 2023 – August 2023",
+    type: "Software Development Internship",
+    highlights: [
+      "Developed two working prototypes using the Modo application platform to improve campus mobile app functionality",
+      "Implemented JavaScript solutions for REST API requests and built custom database architecture using PostgreSQL",
+      "Utilized AWS cloud services including Lambda, API Gateway, and CloudWatch to create serverless functions and debug services",
+      "Designed responsive mobile and desktop user experiences using the Modo XModule Platform"
     ]
   },
   {
@@ -94,7 +107,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Sidebar onContactClick={() => handleContactClick('sidebar')} />
-      
+
       <main className="lg:ml-72">
         <div className="p-8 max-w-6xl mx-auto">
           {/* Hero Section */}
@@ -111,17 +124,17 @@ export default function About() {
                 </h1>
                 <div className="prose prose-lg dark:prose-invert max-w-none">
                   <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
-                    I&apos;m a Computer Science and Engineering graduate from UC Merced, passionate about 
-                    creating innovative solutions that bridge technology with real-world impact. My expertise 
+                    I&apos;m a Computer Science and Engineering graduate from UC Merced, passionate about
+                    creating innovative solutions that bridge technology with real-world impact. My expertise
                     spans AI/ML, full-stack development, and digital transformation initiatives.
                   </p>
                   <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                    With experience in supervisory leadership and a track record of developing applications 
-                    that streamline workflows and improve user experiences, I&apos;m driven by the opportunity 
+                    With experience in supervisory leadership and a track record of developing applications
+                    that streamline workflows and improve user experiences, I&apos;m driven by the opportunity
                     to solve complex problems through thoughtful engineering and strategic technology implementation.
                   </p>
                 </div>
-                
+
                 <div className="flex flex-wrap gap-4 mt-8">
                   <button
                     onClick={() => handleContactClick('about_hero')}
@@ -139,7 +152,7 @@ export default function About() {
                   </a>
                 </div>
               </div>
-              
+
               <div className="lg:w-80">
                 <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
                   <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Quick Facts</h3>
@@ -174,7 +187,7 @@ export default function About() {
             className="mb-16"
           >
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Technical Skills</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-3 mb-4">
@@ -270,7 +283,7 @@ export default function About() {
             className="mb-16"
           >
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Professional Experience</h2>
-            
+
             <div className="space-y-8">
               {experiences.map((exp, index) => (
                 <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
@@ -295,7 +308,7 @@ export default function About() {
                       </span>
                     </div>
                   </div>
-                  
+
                   <ul className="space-y-2">
                     {exp.highlights.map((highlight, idx) => (
                       <li key={idx} className="flex items-start gap-2 text-gray-600 dark:text-gray-300">
@@ -317,7 +330,7 @@ export default function About() {
             className="mb-16"
           >
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Featured Projects</h2>
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {projects.map((project, index) => (
                 <div key={index} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
@@ -327,9 +340,9 @@ export default function About() {
                     </div>
                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{project.title}</h3>
                   </div>
-                  
+
                   <p className="text-gray-600 dark:text-gray-300 mb-4">{project.description}</p>
-                  
+
                   <div className="flex flex-wrap gap-2 mb-4">
                     {project.technologies.map((tech) => (
                       <span key={tech} className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-sm">
@@ -337,7 +350,7 @@ export default function About() {
                       </span>
                     ))}
                   </div>
-                  
+
                   <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1">
                     <Calendar size={14} />
                     {project.period}
@@ -359,16 +372,16 @@ export default function About() {
                 <GraduationCap className="text-blue-600" size={24} />
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Education</h3>
               </div>
-              
+
               <div>
                 <h4 className="font-semibold text-gray-900 dark:text-white">Bachelor of Science in Computer Science and Engineering</h4>
                 <p className="text-blue-600 dark:text-blue-400">University of California, Merced</p>
                 <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">Graduated: May 2025</p>
-                
+
                 <div className="mt-4">
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Relevant Coursework:</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-                    Data Structures & Algorithms, Database Systems, Full Stack Web Development, 
+                    Data Structures & Algorithms, Database Systems, Full Stack Web Development,
                     Computer Vision, Artificial Intelligence, Computer Architecture, Human-Computer Interaction
                   </p>
                 </div>
@@ -378,7 +391,7 @@ export default function About() {
             <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-6 text-white">
               <h3 className="text-xl font-semibold mb-4">Let&apos;s Connect</h3>
               <p className="mb-6 opacity-90">
-                I&apos;m always interested in discussing new opportunities, collaborating on projects, 
+                I&apos;m always interested in discussing new opportunities, collaborating on projects,
                 or just connecting with fellow developers and innovators.
               </p>
               <button
@@ -393,9 +406,9 @@ export default function About() {
       </main>
 
       {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
 
       {/* Chat Bar */}
