@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Button, Card, Spacer } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { Button, Card, Spacer } from "@heroui/react";
+import { motion } from "motion/react";
 
 const NotFoundPage = () => {
   const router = useRouter();

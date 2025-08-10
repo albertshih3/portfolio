@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spacer, Link } from '@nextui-org/react';
+import { Spacer, Link } from '@heroui/react';
 import { Linkedin, Github } from 'lucide-react';
 
 const Footer: React.FC = () => {

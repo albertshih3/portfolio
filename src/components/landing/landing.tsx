@@ -1,6 +1,6 @@
 // Landing page component. This displays an animated full screen graphic with a greeting and my name.
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect } from "react";
 
 export default function LandingPage() {

@@ -1,6 +1,8 @@
-import { NextUIProvider } from "@nextui-org/react";
+"use client"
+
+import { HeroUIProvider } from "@heroui/react";
 import {ThemeProvider as NextThemesProvider} from "next-themes";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <NextUIProvider><NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>{children}</NextThemesProvider></NextUIProvider>;
+  return <HeroUIProvider><NextThemesProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>{children}</NextThemesProvider></HeroUIProvider>;
 }
