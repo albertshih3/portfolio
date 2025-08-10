@@ -43,7 +43,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
   const socialLinks = [
     { name: "GitHub", icon: Github, href: "https://github.com/albertshih3" },
     { name: "LinkedIn", icon: Linkedin, href: "https://linkedin.com/in/albertshih3" },
-    { name: "Resume", icon: ExternalLink, href: "https://storage.cloud.google.com/portfolio-c973b.firebasestorage.app/resumes/AI_Native_Resume.pdf?authuser=1" },
+    { name: "Resume", icon: ExternalLink, href: "https://storage.googleapis.com/portfolio-c973b.firebasestorage.app/resumes/AI_Native_Resume.pdf" },
   ];
 
   return (
