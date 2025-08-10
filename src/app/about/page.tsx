@@ -1,11 +1,11 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  Code,
-  Brain,
-  Cloud,
-  Database,
+import { motion } from "motion/react";
+import { 
+  Code, 
+  Brain, 
+  Cloud, 
+  Database, 
   Users,
   GraduationCap,
   Calendar,
