@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AnimatePresence } from "motion/react";
-import { Send, MessageCircle, ChevronDown } from "lucide-react";
-import ReactMarkdown from 'react-markdown';
+import { AnimatePresence, motion } from "motion/react";
+import { Send, MessageCircle, X, Sparkles } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface Message {
   id: string;
@@ -17,364 +17,367 @@ interface ChatBarProps {
   setIsOpen: (open: boolean) => void;
 }
 
+const placeholderTexts = [
+  'Ask anything… "What has Albert built?"',
+  'Ask anything… "What\'s his experience with AI?"',
+  'Ask anything… "What languages does he know?"',
+  'Ask anything… "Tell me about his projects."',
+  'Ask anything… "Where did Albert study?"',
+];
+
 export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
-  const [popupMessage, setPopupMessage] = useState("");
   const [bottomMessage, setBottomMessage] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
-  const [placeholderOpacity, setPlaceholderOpacity] = useState(1);
   const [userClosedChat, setUserClosedChat] = useState(false);
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [placeholderOpacity, setPlaceholderOpacity] = useState(1);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const panelInputRef = useRef<HTMLInputElement>(null);
   const lastScrollY = useRef(0);
 
-  const placeholderTexts = [
-    "Ask a question... \"What does Albert do?\"",
-    "Ask a question... \"What's their experience?\"",
-    "Ask a question... \"What projects has Albert built?\"",
-    "Ask a question... \"What languages does Albert know?\"",
-    "Ask a question... \"Where did Albert study?\"",
-    "Ask a question... \"What's Albert's background?\""
-  ];
-
-  const handleCloseChat = () => {
-    setUserClosedChat(true);
-    setIsOpen(false);
-  };
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Scroll to bottom on new messages
   useEffect(() => {
-    scrollToBottom();
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Focus panel input when opened
   useEffect(() => {
     if (isOpen) {
-      inputRef.current?.focus();
+      setTimeout(() => panelInputRef.current?.focus(), 80);
     }
   }, [isOpen]);
 
-  // Auto-open chatbox when first message is sent (unless user manually closed it)
+  // Auto-open on first message
   useEffect(() => {
     if (messages.length > 0 && !isOpen && !userClosedChat) {
       setIsOpen(true);
     }
   }, [messages, isOpen, setIsOpen, userClosedChat]);
 
-  // Bounce animation on initial load
+  // Bounce in animation on load
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setHasAnimated(true);
-    }, 1000); // Animation completes after 1 second (0.2s delay + 0.8s animation)
-
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setHasAnimated(true), 1000);
+    return () => clearTimeout(t);
   }, []);
 
-  // Scroll detection to hide/show chat bar
+  // Hide/show on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      
-      if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        // Scrolling down and past 100px
-        setIsVisible(false);
-      } else if (currentScrollY < lastScrollY.current) {
-        // Scrolling up
-        setIsVisible(true);
-      }
-      
-      lastScrollY.current = currentScrollY;
+      const y = window.scrollY;
+      if (y > lastScrollY.current && y > 100) setIsVisible(false);
+      else if (y < lastScrollY.current) setIsVisible(true);
+      lastScrollY.current = y;
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Rotate placeholder text with fade effect
+  // Rotate placeholder text
   useEffect(() => {
     const interval = setInterval(() => {
-      // Fade out
       setPlaceholderOpacity(0);
-      
-      // After fade out completes, change text and fade in
       setTimeout(() => {
-        setCurrentPlaceholderIndex((prev) => (prev + 1) % placeholderTexts.length);
+        setPlaceholderIndex((i) => (i + 1) % placeholderTexts.length);
         setPlaceholderOpacity(1);
-      }, 300); // Wait for fade out to complete
-      
-    }, 5000); // Change every 5 seconds
-
+      }, 300);
+    }, 5000);
     return () => clearInterval(interval);
-  }, [placeholderTexts.length]);
+  }, []);
 
-  const sendMessage = async (messageText: string, clearInput: () => void) => {
-    console.log('sendMessage called with message:', messageText);
-    if (!messageText.trim() || isLoading) {
-      console.log('Early return - empty message or loading');
-      return;
-    }
+  const sendMessage = async (text: string, clearInput: () => void) => {
+    if (!text.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: messageText.trim(),
+      text: text.trim(),
       isUser: true,
       timestamp: new Date(),
     };
 
-    console.log('Adding user message:', userMessage);
-    setMessages(prev => {
-      const newMessages = [...prev, userMessage];
-      console.log('New messages array:', newMessages);
-      return newMessages;
-    });
+    setMessages((prev) => [...prev, userMessage]);
     clearInput();
     setIsLoading(true);
 
-    // Auto-open the chatbox when sending a message
-    console.log('Current isOpen state:', isOpen);
     if (!isOpen) {
-      console.log('Opening chatbox');
-      setUserClosedChat(false); // Reset the flag when user sends a new message
+      setUserClosedChat(false);
       setIsOpen(true);
     }
 
     try {
-      console.log('Sending request to /api/chat');
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: userMessage.text }),
       });
 
-      console.log('Response status:', response.status);
-      if (!response.ok) {
-        throw new Error('Failed to get response');
-      }
-
+      if (!response.ok) throw new Error("Request failed");
       const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('No response body');
-      }
+      if (!reader) throw new Error("No stream");
 
-      let aiResponseText = "";
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: "",
         isUser: false,
         timestamp: new Date(),
       };
+      setMessages((prev) => [...prev, aiMessage]);
 
-      console.log('Adding AI message placeholder:', aiMessage);
-      setMessages(prev => [...prev, aiMessage]);
-
+      let accumulated = "";
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-
-        const chunk = new TextDecoder().decode(value);
-        aiResponseText += chunk;
-        
-        setMessages(prev => prev.map(msg => 
-          msg.id === aiMessage.id 
-            ? { ...msg, text: aiResponseText }
-            : msg
-        ));
+        accumulated += new TextDecoder().decode(value);
+        setMessages((prev) =>
+          prev.map((m) =>
+            m.id === aiMessage.id ? { ...m, text: accumulated } : m
+          )
+        );
       }
-      console.log('Streaming complete');
-    } catch (error) {
-      console.error('Error:', error);
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: "Sorry, I encountered an error. Please try again later.",
-        isUser: false,
-        timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, errorMessage]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: (Date.now() + 1).toString(),
+          text: "Something went wrong. Please try again.",
+          isUser: false,
+          timestamp: new Date(),
+        },
+      ]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('handleSubmit called - delegating to sendMessage');
-    await sendMessage(popupMessage, () => setPopupMessage(""));
+  const handleClose = () => {
+    setUserClosedChat(true);
+    setIsOpen(false);
   };
 
   return (
     <>
-      {/* Chatbox - appears above the bottom bar */}
+      {/* ── Centered chat panel ─────────────────────────────────── */}
       <AnimatePresence>
         {isOpen && (
-          <div
-            className="fixed bottom-24 sm:bottom-20 md:bottom-16 right-2 sm:right-4 md:right-6 w-[95vw] sm:w-96 h-[70vh] sm:h-[550px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl flex flex-col z-[100] overflow-hidden"
-            style={{ 
-              animation: 'fadeIn 0.2s ease-out'
-            }}
+          <motion.div
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
           >
-              {/* Chatbox Header */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-blue-600 to-blue-700 text-white relative">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <h3 className="font-medium text-white">AI Assist</h3>
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={handleClose}
+              aria-hidden="true"
+            />
+
+            {/* Panel */}
+            <motion.div
+              className="relative w-full max-w-2xl flex flex-col bg-white dark:bg-stone-900 rounded-2xl border border-stone-200 dark:border-stone-800 shadow-2xl overflow-hidden"
+              style={{ height: "min(78vh, 700px)" }}
+              initial={{ scale: 0.96, y: 24, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.96, y: 24, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 220, damping: 22, mass: 0.7 }}
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="AI assistant chat"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 bg-stone-950 dark:bg-stone-950 border-b border-stone-800 flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="w-4 h-4 text-stone-950" />
+                  </div>
+                  <div>
+                    <p className="font-display font-semibold text-white text-sm leading-tight">
+                      Ask About Albert
+                    </p>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="w-1.5 h-1.5 bg-green-400 rounded-full" />
+                      <span className="text-xs text-stone-400">Powered by Google Gemini</span>
+                    </div>
+                  </div>
                 </div>
                 <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleCloseChat();
-                  }}
-                  className="p-2 hover:bg-white/20 rounded-md transition-colors cursor-pointer relative z-50 flex items-center justify-center min-w-[32px] min-h-[32px] bg-white/10"
-                  type="button"
+                  onClick={handleClose}
                   aria-label="Close chat"
+                  className="p-2 rounded-lg text-stone-400 hover:text-white hover:bg-stone-800 transition-colors"
                 >
-                  <ChevronDown className="w-4 h-4 text-white" />
+                  <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white dark:bg-gray-900">
+              {/* Messages */}
+              <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
                 {messages.length === 0 && (
-                  <div className="text-center py-6 text-gray-600 dark:text-gray-400">
-                    <div className="w-12 h-12 mx-auto mb-3 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                      <MessageCircle className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <div className="flex flex-col items-center justify-center h-full text-center pb-8">
+                    <div className="w-14 h-14 bg-amber-50 dark:bg-amber-950/30 rounded-full flex items-center justify-center mb-4">
+                      <MessageCircle className="w-7 h-7 text-amber-600 dark:text-amber-500" />
                     </div>
-                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Ask me about Albert!</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">I can help with questions about his experience, skills, and projects.</p>
+                    <p className="font-display font-semibold text-stone-900 dark:text-stone-50 mb-1">
+                      Ask me about Albert
+                    </p>
+                    <p className="text-sm text-stone-400 dark:text-stone-500 max-w-xs">
+                      I can answer questions about his experience, projects, skills, and background.
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-2 justify-center">
+                      {["What has he built?", "What's his tech stack?", "Where did he study?"].map((q) => (
+                        <button
+                          key={q}
+                          onClick={() => sendMessage(q, () => {})}
+                          className="px-3.5 py-1.5 text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-full hover:bg-amber-100 dark:hover:bg-amber-950/40 hover:text-amber-700 dark:hover:text-amber-400 transition-colors"
+                        >
+                          {q}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
-                
+
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
                     className={`flex ${msg.isUser ? "justify-end" : "justify-start"}`}
                   >
+                    {!msg.isUser && (
+                      <div className="w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mr-2.5 mt-0.5">
+                        <Sparkles className="w-3.5 h-3.5 text-stone-950" />
+                      </div>
+                    )}
                     <div
-                      className={`max-w-[80%] px-3 py-2 rounded-2xl text-sm ${
-                        msg.isUser 
-                          ? 'bg-blue-600 text-white rounded-br-md' 
-                          : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 rounded-bl-md'
+                      className={`max-w-[78%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                        msg.isUser
+                          ? "bg-amber-600 text-white rounded-br-md"
+                          : "bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-100 rounded-bl-md"
                       }`}
                     >
                       {msg.isUser ? (
-                        <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+                        <p className="whitespace-pre-wrap">{msg.text}</p>
                       ) : (
-                        <div className="prose prose-sm max-w-none dark:prose-invert prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0">
+                        <div className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1.5 prose-p:leading-relaxed prose-ul:my-1.5 prose-ol:my-1.5 prose-li:my-0.5 prose-headings:font-display prose-headings:font-semibold prose-headings:text-stone-900 dark:prose-headings:text-stone-50 prose-strong:font-semibold prose-a:text-amber-600 dark:prose-a:text-amber-400 prose-a:no-underline hover:prose-a:underline prose-code:text-amber-700 dark:prose-code:text-amber-400 prose-code:bg-amber-50 dark:prose-code:bg-amber-950/30 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:before:content-none prose-code:after:content-none">
                           <ReactMarkdown>{msg.text}</ReactMarkdown>
                         </div>
                       )}
                     </div>
                   </div>
                 ))}
-                
+
                 {isLoading && (
                   <div className="flex justify-start">
-                    <div className="px-3 py-2 rounded-2xl rounded-bl-md bg-gray-100 dark:bg-gray-800">
-                      <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="w-7 h-7 bg-amber-500 rounded-full flex items-center justify-center flex-shrink-0 mr-2.5 mt-0.5">
+                      <Sparkles className="w-3.5 h-3.5 text-stone-950" />
+                    </div>
+                    <div className="px-4 py-3 rounded-2xl rounded-bl-md bg-stone-100 dark:bg-stone-800">
+                      <div className="flex space-x-1 items-center h-4">
+                        <span className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+                        <span className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "120ms" }} />
+                        <span className="w-1.5 h-1.5 bg-stone-400 rounded-full animate-bounce" style={{ animationDelay: "240ms" }} />
                       </div>
                     </div>
                   </div>
                 )}
-                
+
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* AI Disclosure */}
-              <div className="px-4 py-2 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-                <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
-                  AI Assist is powered by Google Gemini, mistakes may occur. 
+              {/* Disclaimer */}
+              <div className="px-5 py-2 border-t border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/50 flex-shrink-0">
+                <p className="text-xs text-stone-400 dark:text-stone-500 text-center">
+                  AI responses may not always be accurate.
                 </p>
               </div>
 
-              {/* Chatbox Input */}
-              <div className="p-3 bg-white dark:bg-gray-900">
-                <form onSubmit={handleSubmit} className="flex space-x-2">
+              {/* Input */}
+              <div className="px-4 py-3 bg-white dark:bg-stone-900 border-t border-stone-100 dark:border-stone-800 flex-shrink-0">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    sendMessage(popupMessage, () => setPopupMessage(""));
+                  }}
+                  className="flex gap-2"
+                >
                   <input
-                    ref={inputRef}
+                    ref={panelInputRef}
                     type="text"
                     value={popupMessage}
                     onChange={(e) => setPopupMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1 px-3 py-2 text-sm bg-gray-100 dark:bg-gray-800 border-0 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                    placeholder="Ask a question…"
                     disabled={isLoading}
+                    className="flex-1 px-4 py-2.5 text-sm bg-stone-100 dark:bg-stone-800 border border-transparent focus:border-amber-400 dark:focus:border-amber-600 focus:outline-none rounded-xl text-stone-900 dark:text-stone-50 placeholder-stone-400 dark:placeholder-stone-500 transition-colors"
                   />
                   <button
                     type="submit"
                     disabled={!popupMessage.trim() || isLoading}
-                    className="px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl transition-colors"
+                    aria-label="Send message"
+                    className="px-4 py-2.5 bg-amber-600 hover:bg-amber-700 disabled:bg-stone-300 dark:disabled:bg-stone-700 disabled:cursor-not-allowed text-white rounded-xl transition-colors flex-shrink-0"
                   >
                     <Send className="w-4 h-4" />
                   </button>
                 </form>
               </div>
-            </div>
+            </motion.div>
+          </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Tesla-style Bottom Chat Bar */}
-      <div 
+      {/* ── Floating bottom trigger bar ─────────────────────────── */}
+      <div
         className={`fixed bottom-0 left-0 right-0 z-[90] flex justify-center pointer-events-none transition-all duration-500 ease-out ${
-          isVisible ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
         }`}
       >
         <div
-          className={`m-4 w-full max-w-2xl bg-white/90 dark:bg-gray-900/90 border border-gray-200/50 dark:border-gray-700/50 rounded-full shadow-lg backdrop-blur-xl flex items-center px-6 py-3 pointer-events-auto transition-all duration-300 ease-out`}
-          style={{ 
-            backdropFilter: 'blur(20px)',
-            animation: !hasAnimated ? 'chatBounceIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s 1 forwards' : 'none',
-            transform: !hasAnimated ? 'translateY(100px)' : 'translateY(0)',
-            opacity: !hasAnimated ? 0 : 1
+          className="m-4 w-full max-w-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-full shadow-lg flex items-center px-5 py-2.5 pointer-events-auto gap-3"
+          style={{
+            animation: !hasAnimated
+              ? "chatBounceIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s 1 forwards"
+              : "none",
+            transform: !hasAnimated ? "translateY(100px)" : "translateY(0)",
+            opacity: !hasAnimated ? 0 : 1,
           }}
         >
-          <div className="flex items-center space-x-3 flex-1">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-              <MessageCircle className="w-4 h-4 text-white" />
-            </div>
-            <input
-              type="text"
-              value={bottomMessage}
-              onChange={e => setBottomMessage(e.target.value)}
-              className="flex-1 bg-transparent outline-none text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-base font-medium"
-              placeholder={placeholderTexts[currentPlaceholderIndex]}
-              style={{ 
-                '--placeholder-opacity': placeholderOpacity 
-              } as React.CSSProperties & { '--placeholder-opacity': number }}
-              onKeyDown={async (e) => {
-                if (e.key === 'Enter' && bottomMessage.trim()) {
-                  await sendMessage(bottomMessage, () => setBottomMessage(""));
-                }
-              }}
-              disabled={isLoading}
-            />
-            <button
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-full font-medium transition-all duration-200 hover:scale-105 active:scale-95"
-              onClick={async () => {
-                if (bottomMessage.trim()) {
-                  await sendMessage(bottomMessage, () => setBottomMessage(""));
-                }
-              }}
-              disabled={!bottomMessage.trim() || isLoading}
-            >
-              {isLoading ? (
-                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                "Ask"
-              )}
-            </button>
+          <div className="w-7 h-7 bg-amber-600 rounded-full flex items-center justify-center flex-shrink-0">
+            <Sparkles className="w-3.5 h-3.5 text-white" />
           </div>
+          <input
+            type="text"
+            value={bottomMessage}
+            onChange={(e) => setBottomMessage(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && bottomMessage.trim()) {
+                sendMessage(bottomMessage, () => setBottomMessage(""));
+              }
+            }}
+            disabled={isLoading}
+            placeholder={placeholderTexts[placeholderIndex]}
+            className="flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-stone-50 placeholder-stone-400 dark:placeholder-stone-500 min-w-0"
+            style={{
+              "--placeholder-opacity": placeholderOpacity,
+            } as React.CSSProperties & { "--placeholder-opacity": number }}
+          />
+          <button
+            onClick={() => {
+              if (bottomMessage.trim()) {
+                sendMessage(bottomMessage, () => setBottomMessage(""));
+              }
+            }}
+            disabled={!bottomMessage.trim() || isLoading}
+            className="px-4 py-1.5 bg-amber-600 hover:bg-amber-700 disabled:bg-stone-200 dark:disabled:bg-stone-700 disabled:cursor-not-allowed text-white text-sm font-medium rounded-full transition-colors flex-shrink-0"
+          >
+            {isLoading ? (
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin block" />
+            ) : (
+              "Ask"
+            )}
+          </button>
         </div>
       </div>
     </>

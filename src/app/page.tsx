@@ -2,9 +2,17 @@
 
 import { useState } from "react";
 import type { FC } from "react";
-
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import projectsData from "@/data/projects.json";
+import Image from "next/image";
+import Sidebar from "@/components/sidebar/sidebar";
+import ProjectCard from "@/components/projects/project-card";
+import ProjectDetailModal from "@/components/projects/project-detail-modal";
+import ContactModal from "@/components/contact/contact-modal";
+import ChatBar from "@/components/chat/chat-bar";
+import { analytics } from "@/lib/firebase";
+import { logEvent } from "firebase/analytics";
+
 type Project = {
   name: string;
   description: string;
@@ -19,65 +27,71 @@ type Project = {
   learnings?: string;
 };
 
-import Image from "next/image";
-import Sidebar from "@/components/sidebar/sidebar";
-import ProjectCard from "@/components/projects/project-card";
-import ProjectDetailModal from "@/components/projects/project-detail-modal";
-import ContactModal from "@/components/contact/contact-modal";
-import ChatBar from "@/components/chat/chat-bar";
-import { analytics } from "@/lib/firebase";
-import { logEvent } from "firebase/analytics";
-
-const personalProjects: Project[] = projectsData.personalProjects;
 const workProjects: Project[] = projectsData.workProjects;
+const personalProjects: Project[] = projectsData.personalProjects;
 const academicProjects: Project[] = projectsData.academicProjects || [];
 
-// Tabs component defined before Home component to avoid hoisting issues
+const projectTabs = [
+  { id: "work" as const, label: "Professional Work" },
+  { id: "personal" as const, label: "Personal" },
+  { id: "academic" as const, label: "Academic" },
+] as const;
+
+type TabId = (typeof projectTabs)[number]["id"];
+
 interface TabsProps {
+  workProjects: Project[];
   personalProjects: Project[];
   academicProjects: Project[];
   ProjectCard: FC<Project & { onProjectClick?: () => void }>;
   onProjectClick: (project: Project) => void;
 }
 
-const Tabs: FC<TabsProps> = ({ personalProjects, academicProjects, ProjectCard, onProjectClick }) => {
-  const [activeTab, setActiveTab] = useState<"personal" | "academic">("personal");
-  
+const Tabs: FC<TabsProps> = ({
+  workProjects,
+  personalProjects,
+  academicProjects,
+  ProjectCard,
+  onProjectClick,
+}) => {
+  const [activeTab, setActiveTab] = useState<TabId>("work");
+
+  const projectsByTab: Record<TabId, Project[]> = {
+    work: workProjects,
+    personal: personalProjects,
+    academic: academicProjects,
+  };
+  const activeProjects = projectsByTab[activeTab];
+
   return (
     <div>
-      <div className="flex mb-6">
-        <button
-          className={`px-4 py-2 rounded-t-lg font-medium focus:outline-none transition-colors ${activeTab === "personal" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"}`}
-          onClick={() => setActiveTab("personal")}
-        >
-          Personal Projects
-        </button>
-        <button
-          className={`ml-2 px-4 py-2 rounded-t-lg font-medium focus:outline-none transition-colors ${activeTab === "academic" ? "bg-blue-600 text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"}`}
-          onClick={() => setActiveTab("academic")}
-        >
-          Academic Projects
-        </button>
+      <div className="flex gap-2 mb-8 flex-wrap" role="tablist" aria-label="Project categories">
+        {projectTabs.map((tab) => (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${
+              activeTab === tab.id
+                ? "bg-amber-600 text-white"
+                : "bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
-      <div className="min-h-[200px]">
-        {activeTab === "personal" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {personalProjects.map((project: Project) => (
-              <div key={project.name}>
-                <ProjectCard {...project} onProjectClick={() => onProjectClick(project)} />
-              </div>
-            ))}
-          </div>
-        )}
-        {activeTab === "academic" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {academicProjects.map((project: Project) => (
-              <div key={project.name}>
-                <ProjectCard {...project} onProjectClick={() => onProjectClick(project)} />
-              </div>
-            ))}
-          </div>
-        )}
+      <div role="tabpanel" className="min-h-[200px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {activeProjects.map((project: Project) => (
+            <ProjectCard
+              key={project.name}
+              {...project}
+              onProjectClick={() => onProjectClick(project)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -90,11 +104,8 @@ export default function Home() {
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
 
   const handleContactClick = (source: string) => {
-    // Track contact button clicks
     if (analytics) {
-      logEvent(analytics, 'contact_button_click', {
-        button_source: source
-      });
+      logEvent(analytics, "contact_button_click", { button_source: source });
     }
     setIsContactModalOpen(true);
   };
@@ -105,163 +116,145 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <Sidebar onContactClick={() => handleContactClick('sidebar')} />
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950">
+      <Sidebar onContactClick={() => handleContactClick("sidebar")} />
 
       <main className="lg:ml-72">
-        <div className="pt-16 px-8 pb-8">
-          {/* Hero Section */}
+        <div className="pt-12 px-6 lg:px-12 pb-12">
+
+          {/* Hero */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-16"
+            transition={{ duration: 0.5 }}
+            className="mb-20 max-w-6xl"
           >
-            <div className="max-w-6xl">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div>
-                  <motion.h1
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6"
-                  >
-                    Hi, I&apos;m Albert! 👋
-                  </motion.h1>
-                    <motion.p
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    className="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
-                    >
-                    I&apos;m a software engineer and recent Computer Science graduate passionate about creating innovative solutions that make a positive impact. As an AI Native developer, I have extensive experience leveraging AI tools to achieve ambitious goals and accelerate development. I love building applications that solve real-world problems and connecting technology with meaningful purposes.
-                    </motion.p>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="flex flex-wrap gap-4"
-                  >
-    <a
-      href="#projects"
-      className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-colors"
-    >
-      View My Work
-    </a>
-    <button
-      onClick={() => handleContactClick('hero_section')}
-      className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-8 py-3 rounded-lg font-medium transition-colors"
-    >
-      Get In Touch
-    </button>
-  </motion.div>
-</div>
-
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="flex justify-center lg:justify-end"
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.05 }}
+                  className="text-amber-600 dark:text-amber-500 font-semibold text-sm uppercase tracking-widest mb-4"
                 >
-                  <div className="relative">
-                    <Image
-                      src="/mainphoto.jpeg"
-                      alt="Albert Shih - Forward Deployed Engineer"
-                      width={400}
-                      height={400}
-                      className="rounded-2xl shadow-2xl object-cover"
-                      priority
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
-                  </div>
+                  Software Engineer @ Palo Alto Networks
+                </motion.p>
+                <motion.h1
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="text-5xl lg:text-7xl font-display font-bold text-stone-900 dark:text-stone-50 mb-6 leading-tight tracking-tight"
+                >
+                  Albert Shih
+                </motion.h1>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-lg text-stone-600 dark:text-stone-400 mb-8 leading-relaxed max-w-xl"
+                >
+                  I build software that earns its keep. From an AI-powered
+                  health monitoring system to a mobile app that replaced paper
+                  workflows at my local zoo — I work best at the
+                  intersection of technical depth and real-world impact.
+                </motion.p>
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.3 }}
+                  className="flex flex-wrap gap-3"
+                >
+                  <a
+                    href="#projects"
+                    className="bg-amber-600 hover:bg-amber-700 text-white px-7 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    See My Work
+                  </a>
+                  <button
+                    onClick={() => handleContactClick("hero_section")}
+                    className="border border-stone-300 dark:border-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 px-7 py-3 rounded-lg font-medium transition-colors"
+                  >
+                    Get In Touch
+                  </button>
                 </motion.div>
               </div>
+
+              <motion.div
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex justify-center lg:justify-end"
+              >
+                <Image
+                  src="/mainphoto.jpeg"
+                  alt="Albert Shih"
+                  width={380}
+                  height={380}
+                  className="rounded-2xl object-cover"
+                  priority
+                />
+              </motion.div>
             </div>
           </motion.div>
 
-          {/* Work Samples Section (now at the top) */}
+          {/* Projects — merged Work / Personal / Academic into one section */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mb-16"
-          >
-            <div className="mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                Work Samples
-              </h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-              {workProjects.map((project, index) => (
-                <motion.div
-                  key={project.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                >
-                  <ProjectCard {...project} onProjectClick={() => handleProjectClick(project)} />
-                </motion.div>
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Tabbed Personal/Academic Projects Section */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mb-16"
+            transition={{ duration: 0.5, delay: 0.3 }}
             id="projects"
+            className="mb-20 max-w-6xl"
           >
-            <div className="mb-12">
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <div className="mb-10">
+              <h2 className="text-3xl lg:text-4xl font-display font-bold text-stone-900 dark:text-stone-50 mb-3">
                 Projects
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Browse my personal and academic projects below.
+              <p className="text-stone-500 dark:text-stone-400">
+                A selection of professional, personal, and academic work.
               </p>
             </div>
-            <Tabs personalProjects={personalProjects} academicProjects={academicProjects} ProjectCard={ProjectCard} onProjectClick={handleProjectClick} />
+            <Tabs
+              workProjects={workProjects}
+              personalProjects={personalProjects}
+              academicProjects={academicProjects}
+              ProjectCard={ProjectCard}
+              onProjectClick={handleProjectClick}
+            />
           </motion.section>
 
-          {/* CTA Section */}
+          {/* CTA */}
           <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 lg:p-12 text-center text-white"
+            transition={{ duration: 0.5, delay: 0.5 }}
+            className="bg-stone-950 dark:bg-stone-900 border border-stone-800 rounded-2xl p-8 lg:p-12 text-center max-w-6xl"
           >
-            <h2 className="text-2xl lg:text-3xl font-bold mb-4">
+            <h2 className="text-2xl lg:text-3xl font-display font-bold text-white mb-4">
               Let&apos;s Work Together
             </h2>
-            <p className="text-lg mb-8 opacity-90">
-              I&apos;m always interested in new opportunities and collaborations.
-              Feel free to reach out if you&apos;d like to connect!
+            <p className="text-stone-400 text-lg mb-8 max-w-xl mx-auto">
+              I&apos;m open to new opportunities and genuine collaborations.
+              Reach out if you want to build something worth building.
             </p>
             <button
-              onClick={() => handleContactClick('cta_section')}
-              className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-medium transition-colors inline-block"
+              onClick={() => handleContactClick("cta_section")}
+              className="bg-amber-500 hover:bg-amber-400 text-stone-950 px-8 py-3 rounded-lg font-semibold transition-colors"
             >
-              Contact Me
+              Get In Touch
             </button>
           </motion.section>
         </div>
       </main>
 
-      {/* Contact Modal */}
       <ContactModal
         isOpen={isContactModalOpen}
         onClose={() => setIsContactModalOpen(false)}
       />
-
-      {/* Project Detail Modal */}
       <ProjectDetailModal
         isOpen={isProjectModalOpen}
         onClose={() => setIsProjectModalOpen(false)}
         project={selectedProject}
       />
-
-      {/* Chat Bar */}
       <ChatBar isOpen={isChatOpen} setIsOpen={setIsChatOpen} />
     </div>
   );
