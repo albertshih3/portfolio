@@ -52,6 +52,58 @@
     ],
     "workProjects": [
         {
+            "name": "Sales Workbench",
+            "description": "Internal multi-agent AI tool at Palo Alto Networks that helps sellers consolidate and interact with their Salesforce accounts and opportunities.",
+            "language": "TypeScript",
+            "topics": [
+                "Gemini GenKit",
+                "TypeScript",
+                "Python",
+                "Google Cloud Platform",
+                "Spanner",
+                "BigQuery",
+                "Cloud Logging",
+                "Multi-Agent Systems"
+            ],
+            "url": "",
+            "githubUrl": "",
+            "overview": "Sales Workbench is an internal AI-native tool built at Palo Alto Networks to help enterprise sellers work more efficiently. The system provides a multi-agent chat experience where sellers can consolidate, query, and reason about their Salesforce accounts and opportunities in natural language. One of the agents was built using Gemini GenKit and TypeScript, with Spanner, BigQuery, and Cloud Logging powering data access and observability across the platform. An enterprise-grade evaluation framework was also developed in Python to measure the three-agent system across SQL query generation, execution correctness, and response quality — ensuring reliability at scale.",
+            "myRole": "Developed one of the core agents in the multi-agent system using Gemini GenKit and TypeScript. Designed and implemented the end-to-end evaluation framework in Python, covering SQL generation, execution, and response assessment for all three agents.",
+            "features": [
+                "Multi-agent architecture for seller account and opportunity management",
+                "Natural language interface over Salesforce data via Gemini GenKit",
+                "GCP data backend using Spanner and BigQuery",
+                "Structured Cloud Logging for observability across agents",
+                "Enterprise-grade Python evaluation framework testing SQL generation, execution, and response quality"
+            ],
+            "challenges": "Building a reliable evaluation framework for a multi-agent system required designing test cases that covered the full pipeline — from SQL query generation through execution to final response quality — while keeping the framework maintainable and extensible as the agents evolved.",
+            "learnings": "Deepened expertise in multi-agent system design, LLM evaluation methodologies, and working with enterprise-scale GCP data infrastructure. Gained practical experience integrating Gemini GenKit into production TypeScript services."
+        },
+        {
+            "name": "AI Quoting",
+            "description": "Active internal project at Palo Alto Networks rethinking CPQ through an agentic approach, with a focus on fast, AI-assisted frontend development.",
+            "language": "TypeScript",
+            "topics": [
+                "Agentic AI",
+                "CPQ",
+                "TypeScript",
+                "React",
+                "Cursor",
+                "Google Cloud Platform"
+            ],
+            "url": "",
+            "githubUrl": "",
+            "overview": "AI Quoting is an active project at Palo Alto Networks aimed at rethinking the Configure, Price, Quote (CPQ) process through an agentic AI approach. The project explores how autonomous agents can streamline and modernize quoting workflows at enterprise scale. My role is primarily on the frontend, where I use AI coding tools like Cursor to accelerate development velocity and deliver fast turnarounds on features.",
+            "myRole": "Frontend developer on the AI Quoting project. Leveraging AI-assisted development (Cursor) to ship UI work quickly and maintain high iteration speed on an active, evolving product.",
+            "features": [
+                "Agentic workflow for CPQ modernization",
+                "Fast frontend iteration cycles powered by AI coding tools",
+                "Enterprise-scale quoting system design"
+            ],
+            "challenges": "Working on an active, rapidly evolving product requires staying aligned with shifting requirements while maintaining development velocity — a balance achieved through AI-assisted coding and close cross-functional collaboration.",
+            "learnings": "Gained hands-on experience using AI coding tools (Cursor) in a production engineering context, demonstrating how developer tooling can meaningfully accelerate output without sacrificing quality."
+        },
+        {
             "name": "Empathy Guide App",
             "description": "Oakland Zoo Empathy Guide mobile app, for internal staff use to enhance visitor experiences.",
             "language": "TypeScript",

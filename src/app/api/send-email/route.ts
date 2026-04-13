@@ -42,36 +42,48 @@ export async function POST(request: NextRequest) {
 
     // Send email using Resend
     const resend = new Resend(resendApiKey);
-    
+
+    const escapeHtml = (str: string) =>
+      str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message).replace(/\n/g, '<br>');
+
     const emailResult = await resend.emails.send({
       from: 'Portfolio Contact <portfolio@resend.dev>', // This is a verified domain on Resend
       to: 'albertshih3@gmail.com',
-      subject: `Portfolio Contact from ${name}`,
+      subject: `Portfolio Contact from ${safeName}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333; border-bottom: 2px solid #3b82f6; padding-bottom: 10px;">
             New Portfolio Contact Form Submission
           </h2>
-          
+
           <div style="margin: 20px 0;">
-            <p style="margin: 10px 0;"><strong>Name:</strong> ${name}</p>
-            <p style="margin: 10px 0;"><strong>Email:</strong> ${email}</p>
+            <p style="margin: 10px 0;"><strong>Name:</strong> ${safeName}</p>
+            <p style="margin: 10px 0;"><strong>Email:</strong> ${safeEmail}</p>
           </div>
-          
+
           <div style="margin: 20px 0;">
             <h3 style="color: #333;">Message:</h3>
             <div style="background: #f8f9fa; padding: 15px; border-radius: 5px; border-left: 4px solid #3b82f6;">
-              ${message.replace(/\n/g, '<br>')}
+              ${safeMessage}
             </div>
           </div>
-          
+
           <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 14px;">
             <p>This message was sent from your portfolio contact form.</p>
-            <p>Reply directly to this email to respond to ${name}.</p>
+            <p>Reply directly to this email to respond to ${safeName}.</p>
           </div>
         </div>
       `,
-      replyTo: email, // This allows you to reply directly to the sender
+      replyTo: email,
     });
 
     if (emailResult.error) {
