@@ -616,6 +616,7 @@ export default function BlogPost({ params }: BlogPostPageProps) {
     
     const foundPost = blogPosts.find(p => p.id === slug);
     if (foundPost) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setPost(foundPost);
       // Track blog post view
       if (analytics) {

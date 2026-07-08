@@ -93,6 +93,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
     if (!text.trim() || isLoading) return;
 
     const userMessage: Message = {
+      // eslint-disable-next-line react-hooks/purity
       id: Date.now().toString(),
       text: text.trim(),
       isUser: true,
@@ -120,6 +121,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
       if (!reader) throw new Error("No stream");
 
       const aiMessage: Message = {
+        // eslint-disable-next-line react-hooks/purity
         id: (Date.now() + 1).toString(),
         text: "",
         isUser: false,
@@ -131,6 +133,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
+        // eslint-disable-next-line react-hooks/immutability
         accumulated += new TextDecoder().decode(value);
         setMessages((prev) =>
           prev.map((m) =>

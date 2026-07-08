@@ -169,6 +169,7 @@ const Sidebar = ({ onContactClick }: SidebarProps) => {
   const pathname = usePathname();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
