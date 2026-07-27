@@ -30,7 +30,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "^16.2.3",
-    "postcss": "^8.5.9",
+    "postcss": "^8.5.18",
     "tailwindcss": "^4.2.2",
     "typescript": "^5"
   }
