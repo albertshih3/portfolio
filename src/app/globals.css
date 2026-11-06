@@ -39,18 +39,11 @@
 }
 
 @keyframes chatBounceIn {
-  0% {
-    transform: translateY(100px);
+  from {
+    transform: translateY(24px);
     opacity: 0;
   }
-  60% {
-    transform: translateY(-12px);
-    opacity: 1;
-  }
-  80% {
-    transform: translateY(4px);
-  }
-  100% {
+  to {
     transform: translateY(0);
     opacity: 1;
   }
@@ -60,4 +53,18 @@
 input::placeholder {
   opacity: var(--placeholder-opacity, 1);
   transition: opacity 0.3s ease-in-out;
+}
+
+/* Reduced motion is not optional: every CSS-driven animation gets an instant
+   or crossfade fallback. JS-driven motion.* entrances/hovers are handled
+   separately via <MotionConfig reducedMotion="user"> in providers.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -77,7 +77,7 @@ const ProjectDetailModal = ({ isOpen, onClose, project }: ProjectDetailModalProp
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="absolute top-4 right-4 p-1.5 rounded-lg text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                className="absolute top-4 right-4 p-1.5 rounded-lg text-stone-500 hover:text-stone-700 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -91,7 +91,7 @@ const ProjectDetailModal = ({ isOpen, onClose, project }: ProjectDetailModalProp
 
               <div className="flex flex-wrap gap-1.5">
                 {project.language && (
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300">
+                  <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-stone-100 text-stone-700 dark:bg-stone-800 dark:text-stone-300">
                     {project.language}
                   </span>
                 )}
@@ -126,7 +126,7 @@ const ProjectDetailModal = ({ isOpen, onClose, project }: ProjectDetailModalProp
               {/* Overview */}
               {project.overview && (
                 <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3">
+                  <h3 className="text-sm font-semibold text-stone-500 dark:text-stone-500 mb-3">
                     Overview
                   </h3>
                   <p className="text-stone-600 dark:text-stone-400 leading-relaxed text-sm">
@@ -138,7 +138,7 @@ const ProjectDetailModal = ({ isOpen, onClose, project }: ProjectDetailModalProp
               {/* Key Features */}
               {project.features && project.features.length > 0 && (
                 <div>
-                  <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-3">
+                  <h3 className="text-sm font-semibold text-stone-500 dark:text-stone-500 mb-3">
                     Key Features
                   </h3>
                   <ul className="space-y-2">
@@ -157,7 +157,7 @@ const ProjectDetailModal = ({ isOpen, onClose, project }: ProjectDetailModalProp
                 <div className="space-y-5 border-t border-stone-100 dark:border-stone-800 pt-5">
                   {project.challenges && (
                     <div>
-                      <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-2">
+                      <h3 className="text-sm font-semibold text-stone-500 dark:text-stone-500 mb-2">
                         Challenges
                       </h3>
                       <p className="text-sm text-stone-500 dark:text-stone-500 leading-relaxed">
@@ -167,7 +167,7 @@ const ProjectDetailModal = ({ isOpen, onClose, project }: ProjectDetailModalProp
                   )}
                   {project.learnings && (
                     <div>
-                      <h3 className="text-xs font-semibold uppercase tracking-widest text-stone-400 dark:text-stone-500 mb-2">
+                      <h3 className="text-sm font-semibold text-stone-500 dark:text-stone-500 mb-2">
                         What I Learned
                       </h3>
                       <p className="text-sm text-stone-500 dark:text-stone-500 leading-relaxed">

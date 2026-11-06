@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-07T00:00:00.000Z",
+  "title": "Design System: Albert Shih — Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "amber-primary": { "role": "primary", "displayName": "Amber Workbench", "canonical": "oklch(63% 0.16 46)", "tonalRamp": ["#451a03", "#78350f", "#92400e", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fef3c7"] },
+      "surface": { "role": "neutral", "displayName": "Warm Paper", "canonical": "oklch(98.5% 0.001 106)", "tonalRamp": ["#0c0a09", "#1c1917", "#292524", "#44403c", "#78716c", "#a8a29e", "#e7e5e4", "#fafaf9"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "oklch(21% 0.006 56)", "tonalRamp": ["#0c0a09", "#1c1917", "#292524", "#44403c", "#78716c", "#a8a29e", "#e7e5e4", "#fafaf9"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Fraunces)", "purpose": "Hero and section headlines only." },
+      "body": { "displayName": "Body (Plus Jakarta Sans)", "purpose": "Paragraph copy, descriptions." },
+      "label": { "displayName": "Label (Plus Jakarta Sans)", "purpose": "Buttons, badges, nav, form labels." }
+    },
+    "shadows": [
+      { "name": "hover-lift", "value": "0 4px 12px rgba(28,25,23,0.08)", "purpose": "Project card hover only, paired with -4px translateY." },
+      { "name": "modal", "value": "0 20px 40px rgba(28,25,23,0.15)", "purpose": "Contact modal and detail modals against the backdrop." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.25, 1, 0.5, 1)", "purpose": "Default ease-out-quart for entrances and state transitions; no bounce or elastic." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main call-to-action button (e.g. hero CTA, contact submit).",
+      "html": "<button class=\"ds-btn-primary\">Get in touch</button>",
+      "css": ".ds-btn-primary { background: #d97706; color: #fafaf9; padding: 12px 28px; border-radius: 8px; font-weight: 500; font-family: 'Plus Jakarta Sans', sans-serif; border: none; transition: background-color 0.2s cubic-bezier(0.25, 1, 0.5, 1); } .ds-btn-primary:hover { background: #b45309; } .ds-btn-primary:focus-visible { outline: 2px solid #d97706; outline-offset: 2px; }"
+    },
+    {
+      "name": "Project Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Project grid card with hover lift.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Project Name</h3><p class=\"ds-card-desc\">Short description of the project.</p></div>",
+      "css": ".ds-card { background: #ffffff; border: 1px solid #e7e5e4; border-radius: 12px; padding: 24px; transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.2s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.2s; } .ds-card:hover { transform: translateY(-4px); box-shadow: 0 4px 12px rgba(28,25,23,0.08); border-color: #fcd34d; } .ds-card-title { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 1.125rem; color: #1c1917; } .ds-card-desc { font-family: 'Plus Jakarta Sans', sans-serif; color: #57534e; font-size: 0.9375rem; line-height: 1.6; }"
+    },
+    {
+      "name": "Nav Item",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Sidebar navigation link, default and active state.",
+      "html": "<a class=\"ds-nav-item\" href=\"#\">About</a>",
+      "css": ".ds-nav-item { display: flex; align-items: center; padding: 12px 16px; border-radius: 8px; color: #57534e; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; text-decoration: none; transition: background-color 0.15s, color 0.15s; } .ds-nav-item:hover { background: #f5f5f4; color: #1c1917; } .ds-nav-item[aria-current='page'] { background: #fffbeb; color: #b45309; }"
+    },
+    {
+      "name": "Tag Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Topic/skill tag chip used on project cards.",
+      "html": "<span class=\"ds-chip\">TypeScript</span>",
+      "css": ".ds-chip { display: inline-block; background: #f5f5f4; color: #57534e; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.75rem; font-weight: 500; padding: 6px 14px; border-radius: 9999px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Form field used in the contact modal.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"Your name\" />",
+      "css": ".ds-input { width: 100%; padding: 12px 16px; border: 1px solid #e7e5e4; border-radius: 8px; background: #ffffff; color: #1c1917; font-family: 'Plus Jakarta Sans', sans-serif; transition: border-color 0.2s; } .ds-input:focus { outline: none; border-color: #d97706; box-shadow: 0 0 0 2px rgba(217,119,6,0.3); } .ds-input::placeholder { color: #a8a29e; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Amber Workbench",
+    "overview": "A craftsperson's workspace, not a showroom: warm stone surfaces, one deliberate accent color, nothing decorative left lying around. The system reads as personal and hand-considered rather than templated. Personality shows up in small, specific details rather than gradients, saturated color fields, or motion for its own sake. The palette is intentionally narrow: stone neutrals do almost all the work, amber appears only where it earns attention. Typography carries the craft signal: a serif display face for headlines paired with a clean grotesque for everything functional.",
+    "keyCharacteristics": [
+      "Restrained, stone-neutral surface with a single warm accent",
+      "Serif display + sans body, high contrast between the two",
+      "Flat-by-default surfaces; elevation is a response to interaction, not decoration",
+      "Motion is functional and calm — no bounce, no unexplained flourish",
+      "Personality lives in copy, craft, and small interaction details, not ornament"
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Amber is the only saturated color in the system. It appears on primary actions and nothing else competes with it.", "section": "colors" },
+      { "name": "The Cream-Bg Check", "body": "#fafaf9 stays because it's near-zero chroma, not because 'warm' was the reflex. If any future pass pushes it warmer/more saturated, that's a regression.", "section": "colors" },
+      { "name": "The Serif-Only-For-Display Rule", "body": "Fraunces appears only in headlines. Body copy, UI chrome, and labels are always Plus Jakarta Sans.", "section": "typography" },
+      { "name": "The Flat-At-Rest Rule", "body": "No surface carries a shadow in its default state. Shadows are earned by interaction (hover, open/focus), never decorative.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep amber to primary actions and single accent moments.",
+      "Do use Fraunces exclusively for display/headline text.",
+      "Do keep surfaces flat at rest; earn shadows through interaction only.",
+      "Do pair every entrance or decorative animation with a prefers-reduced-motion fallback.",
+      "Do use ease-out-quart-style easing; keep distances small (10-20px)."
+    ],
+    "donts": [
+      "Don't ship the generic AI-portfolio template (cream/sand bg, gradient text, uppercase eyebrows, hero-metric blocks, identical icon-grid cards).",
+      "Don't use bounce or elastic easing.",
+      "Don't introduce a second saturated brand color.",
+      "Don't nest cards inside cards, or default to a card for every piece of content.",
+      "Don't use loud SaaS/startup marketing tone in copy."
+    ]
+  }
+}

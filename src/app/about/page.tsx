@@ -121,7 +121,7 @@ export default function About() {
           >
             <div className="flex flex-col lg:flex-row items-start gap-10">
               <div className="flex-1">
-                <h1 className="text-4xl lg:text-5xl font-display font-bold text-stone-900 dark:text-stone-50 mb-6 tracking-tight">
+                <h1 className="text-5xl lg:text-6xl font-display font-bold text-stone-900 dark:text-stone-50 mb-6 tracking-tight text-balance">
                   About Me
                 </h1>
                 <p className="text-xl text-stone-600 dark:text-stone-400 leading-relaxed mb-4">
@@ -184,19 +184,16 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.15 }}
             className="mb-16"
           >
-            <h2 className="text-3xl font-display font-bold text-stone-900 dark:text-stone-50 mb-8">
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-stone-900 dark:text-stone-50 mb-8 tracking-tight">
               Technical Skills
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-8">
               {skillCategories.map(({ key, icon: Icon, label }) => (
-                <div
-                  key={key}
-                  className="bg-white dark:bg-stone-900 rounded-xl p-5 border border-stone-200 dark:border-stone-800"
-                >
-                  <div className="flex items-center gap-2.5 mb-4">
-                    <Icon className="text-amber-600 dark:text-amber-500 flex-shrink-0" size={20} />
-                    <h3 className="font-semibold text-stone-900 dark:text-stone-50">{label}</h3>
+                <div key={key}>
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <Icon className="text-amber-600 dark:text-amber-500 flex-shrink-0" size={18} />
+                    <h3 className="font-semibold text-sm text-stone-900 dark:text-stone-50">{label}</h3>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {skills[key].map((skill) => (
@@ -220,15 +217,15 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="mb-16"
           >
-            <h2 className="text-3xl font-display font-bold text-stone-900 dark:text-stone-50 mb-8">
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-stone-900 dark:text-stone-50 mb-8 tracking-tight">
               Professional Experience
             </h2>
 
-            <div className="space-y-6">
+            <div className="divide-y divide-stone-200 dark:divide-stone-800">
               {experiences.map((exp, index) => (
                 <div
                   key={index}
-                  className="bg-white dark:bg-stone-900 rounded-xl p-6 border border-stone-200 dark:border-stone-800"
+                  className={index === 0 ? "pb-8" : "py-8"}
                 >
                   <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4 gap-3">
                     <div>
@@ -291,7 +288,7 @@ export default function About() {
               <p className="text-stone-500 dark:text-stone-400 text-sm mt-1">Graduated May 2025</p>
 
               <div className="mt-5">
-                <p className="text-xs font-medium uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-2">
+                <p className="text-sm font-semibold text-stone-500 dark:text-stone-500 mb-2">
                   Relevant Coursework
                 </p>
                 <p className="text-sm text-stone-600 dark:text-stone-400 leading-relaxed">

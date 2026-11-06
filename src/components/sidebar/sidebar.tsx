@@ -8,6 +8,7 @@ import {
   Home,
   User,
   FolderOpen,
+  PenLine,
   Mail,
   ExternalLink,
   Menu,
@@ -34,7 +35,8 @@ interface SidebarProps {
 const menuItems = [
   { name: "Home", icon: Home, href: "/" },
   { name: "About", icon: User, href: "/about" },
-  { name: "Projects", icon: FolderOpen, href: "/#projects" },
+  { name: "Projects", icon: FolderOpen, href: "/projects" },
+  { name: "Writing", icon: PenLine, href: "/blog" },
   { name: "Contact", icon: Mail, href: null, isButton: true },
 ] as const;
 
@@ -55,6 +57,8 @@ interface SidebarContentProps {
 }
 
 const SidebarContent = ({ onContactClick, closeMenu, pathname }: SidebarContentProps) => {
+  const [imageError, setImageError] = useState(false);
+
   const isActive = (href: string | null | undefined) => {
     if (!href || href.includes("#")) return false;
     return pathname === href;
@@ -64,17 +68,21 @@ const SidebarContent = ({ onContactClick, closeMenu, pathname }: SidebarContentP
     <div className="p-6 h-full overflow-y-auto flex flex-col">
       {/* Profile */}
       <div className="flex flex-col items-center mb-8">
-        <div className="w-20 h-20 bg-stone-200 dark:bg-stone-700 rounded-full mb-4 overflow-hidden">
-          <Image
-            src="/headshot.jpeg"
-            alt="Albert Shih"
-            width={80}
-            height={80}
-            className="w-full h-full object-cover object-left-top"
-            onError={(e) => {
-              e.currentTarget.style.display = "none";
-            }}
-          />
+        <div className="w-20 h-20 bg-stone-200 dark:bg-stone-700 rounded-full mb-4 overflow-hidden flex items-center justify-center">
+          {imageError ? (
+            <span className="font-display font-semibold text-lg text-stone-500 dark:text-stone-400">
+              AS
+            </span>
+          ) : (
+            <Image
+              src="/headshot.jpeg"
+              alt="Albert Shih"
+              width={80}
+              height={80}
+              className="w-full h-full object-cover object-left-top"
+              onError={() => setImageError(true)}
+            />
+          )}
         </div>
         <h2 className="text-xl font-display font-bold text-stone-900 dark:text-stone-50">
           Albert Shih
@@ -133,7 +141,7 @@ const SidebarContent = ({ onContactClick, closeMenu, pathname }: SidebarContentP
 
       {/* Social links */}
       <div className="border-t border-stone-200 dark:border-stone-700 pt-6 flex-1">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 mb-3 px-1">
+        <h3 className="text-sm font-semibold text-stone-500 dark:text-stone-500 mb-3 px-1">
           Connect
         </h3>
         <div className="space-y-1">

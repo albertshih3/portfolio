@@ -40,9 +40,11 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
   const panelInputRef = useRef<HTMLInputElement>(null);
   const lastScrollY = useRef(0);
 
-  // Scroll to bottom on new messages
+  // Scroll to bottom on new messages. scrollIntoView's smooth behavior isn't
+  // covered by the CSS reduced-motion block or MotionConfig, so it's gated here.
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    messagesEndRef.current?.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
   }, [messages]);
 
   // Focus panel input when opened
@@ -161,6 +163,17 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
     setIsOpen(false);
   };
 
+  // Escape closes the panel, matching ContactModal / ProjectDetailModal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
   return (
     <>
       {/* ── Centered chat panel ─────────────────────────────────── */}
@@ -219,7 +232,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
+              <div data-testid="chat-messages" className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
                 {messages.length === 0 && (
                   <div className="flex flex-col items-center justify-center h-full text-center pb-8">
                     <div className="w-14 h-14 bg-amber-50 dark:bg-amber-950/30 rounded-full flex items-center justify-center mb-4">
@@ -228,7 +241,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
                     <p className="font-display font-semibold text-stone-900 dark:text-stone-50 mb-1">
                       Ask me about Albert
                     </p>
-                    <p className="text-sm text-stone-400 dark:text-stone-500 max-w-xs">
+                    <p className="text-sm text-stone-500 dark:text-stone-500 max-w-xs">
                       I can answer questions about his experience, projects, skills, and background.
                     </p>
                     <div className="mt-6 flex flex-wrap gap-2 justify-center">
@@ -291,9 +304,17 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
                 <div ref={messagesEndRef} />
               </div>
 
+              {/* Screen-reader announcement for the latest assistant reply */}
+              <div aria-live="polite" aria-atomic="true" className="sr-only">
+                {(() => {
+                  const latest = [...messages].reverse().find((m) => !m.isUser)?.text;
+                  return latest ? `Latest reply: ${latest}` : "";
+                })()}
+              </div>
+
               {/* Disclaimer */}
               <div className="px-5 py-2 border-t border-stone-100 dark:border-stone-800 bg-stone-50 dark:bg-stone-950/50 flex-shrink-0">
-                <p className="text-xs text-stone-400 dark:text-stone-500 text-center">
+                <p className="text-xs text-stone-500 dark:text-stone-500 text-center">
                   AI responses may not always be accurate.
                 </p>
               </div>
@@ -314,7 +335,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
                     onChange={(e) => setPopupMessage(e.target.value)}
                     placeholder="Ask a question…"
                     disabled={isLoading}
-                    className="flex-1 px-4 py-2.5 text-sm bg-stone-100 dark:bg-stone-800 border border-transparent focus:border-amber-400 dark:focus:border-amber-600 focus:outline-none rounded-xl text-stone-900 dark:text-stone-50 placeholder-stone-400 dark:placeholder-stone-500 transition-colors"
+                    className="flex-1 px-4 py-2.5 text-sm bg-stone-100 dark:bg-stone-800 border border-transparent focus:border-amber-400 dark:focus:border-amber-600 focus:outline-none rounded-xl text-stone-900 dark:text-stone-50 placeholder-stone-500 dark:placeholder-stone-500 transition-colors"
                   />
                   <button
                     type="submit"
@@ -341,9 +362,9 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
           className="m-4 w-full max-w-xl bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-full shadow-lg flex items-center px-5 py-2.5 pointer-events-auto gap-3"
           style={{
             animation: !hasAnimated
-              ? "chatBounceIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s 1 forwards"
+              ? "chatBounceIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.2s 1 forwards"
               : "none",
-            transform: !hasAnimated ? "translateY(100px)" : "translateY(0)",
+            transform: !hasAnimated ? "translateY(24px)" : "translateY(0)",
             opacity: !hasAnimated ? 0 : 1,
           }}
         >
@@ -361,7 +382,7 @@ export default function ChatBar({ isOpen, setIsOpen }: ChatBarProps) {
             }}
             disabled={isLoading}
             placeholder={placeholderTexts[placeholderIndex]}
-            className="flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-stone-50 placeholder-stone-400 dark:placeholder-stone-500 min-w-0"
+            className="flex-1 bg-transparent outline-none text-sm text-stone-900 dark:text-stone-50 placeholder-stone-500 dark:placeholder-stone-500 min-w-0"
             style={{
               "--placeholder-opacity": placeholderOpacity,
             } as React.CSSProperties & { "--placeholder-opacity": number }}

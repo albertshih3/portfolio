@@ -1,157 +1,114 @@
 "use client";
 
 import { motion } from "motion/react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import { 
-  Home,
-  Construction,
-  Rocket,
-  Coffee,
-  ArrowLeft
-} from "lucide-react";
+import { Calendar, Clock, ArrowRight } from "lucide-react";
 import Sidebar from "@/components/sidebar/sidebar";
 import ContactModal from "@/components/contact/contact-modal";
+import { blogPosts } from "@/data/blog-posts";
 import { analytics } from "@/lib/firebase";
 import { logEvent } from "firebase/analytics";
 
 export default function Blog() {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
-  useEffect(() => {
-    // Track unexpected blog access
-    if (analytics) {
-      logEvent(analytics, 'blog_access_attempt', {
-        user_agent: navigator.userAgent,
-        referrer: document.referrer || 'direct'
-      });
-    }
-  }, []);
-
   const handleContactClick = (source: string) => {
     if (analytics) {
-      logEvent(analytics, 'contact_button_click', {
+      logEvent(analytics, "contact_button_click", {
         button_source: source,
-        page: 'blog_construction'
+        page: "blog",
       });
     }
     setIsContactModalOpen(true);
   };
 
+  const posts = [...blogPosts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center p-4">
-      {/* Under Construction Modal */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.6 }}
-        className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 p-8 max-w-lg w-full text-center"
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mb-6"
-        >
-          <div className="flex justify-center mb-4">
-            <motion.div
-              animate={{ 
-                rotate: [0, -10, 10, -10, 0],
-                scale: [1, 1.1, 1, 1.1, 1] 
-              }}
-              transition={{ 
-                duration: 2,
-                repeat: Infinity,
-                repeatDelay: 3
-              }}
-              className="bg-yellow-100 dark:bg-yellow-900 p-4 rounded-full"
-            >
-              <Construction size={48} className="text-yellow-600 dark:text-yellow-400" />
-            </motion.div>
-          </div>
-          
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            Well, well, well... 🤔
-          </h1>
-          
-          <div className="space-y-3 text-gray-600 dark:text-gray-300">
-            <p className="text-lg">
-              <strong>How did you get here?</strong>
-            </p>
-            <p>
-              You&apos;ve stumbled upon a secret area! 🕵️‍♂️
-            </p>
-            <p>
-              The blog is currently being crafted with the finest digital tools and a concerning amount of coffee.
-            </p>
-          </div>
-        </motion.div>
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950">
+      <Sidebar onContactClick={() => handleContactClick("sidebar")} />
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mb-8"
-        >
-          <div className="flex items-center justify-center gap-4 text-gray-500 dark:text-gray-400 mb-4">
-            <div className="flex items-center gap-2">
-              <Rocket size={20} className="text-blue-500" />
-              <span>Coming Soon™</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Coffee size={20} className="text-amber-500" />
-              <span>Fueled by Caffeine</span>
-            </div>
-          </div>
-          
-          <div className="bg-gray-100 dark:bg-gray-700 rounded-lg p-4 mb-6">
-            <p className="text-sm text-gray-600 dark:text-gray-300">
-              <strong>Coming Soon:</strong> Tech insights, project breakdowns, and probably some questionable coding decisions from my journey as a software engineer.
-            </p>
-          </div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="space-y-4"
-        >
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+      <main className="lg:ml-72">
+        <div className="pt-12 px-6 lg:px-12 pb-12 max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className="mb-12"
           >
-            <ArrowLeft size={20} />
-            Escape to Safety (Home Page)
-          </Link>
-          
-          <div className="text-gray-500 dark:text-gray-400">
-            <p className="text-sm">or</p>
+            <h1 className="font-display text-5xl lg:text-6xl font-bold text-stone-900 dark:text-stone-50 mb-3 tracking-tight text-balance">
+              Writing
+            </h1>
+            <p className="text-lg text-stone-600 dark:text-stone-400 max-w-2xl">
+              Notes on building software, integrating AI, and leading student
+              engineering teams — mostly things I wished someone had told me first.
+            </p>
+          </motion.div>
+
+          <div className="space-y-4">
+            {posts.map((post, index) => (
+              <motion.article
+                key={post.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <Link
+                  href={`/blog/${post.id}`}
+                  className="group block bg-white dark:bg-stone-900 rounded-xl border border-stone-200 dark:border-stone-800 hover:border-amber-300 dark:hover:border-amber-800 hover:shadow-md transition-all duration-200 p-6"
+                >
+                  <div className="flex items-center gap-4 text-sm text-stone-500 dark:text-stone-400 mb-3">
+                    <span className="flex items-center gap-1.5">
+                      <Calendar size={14} />
+                      {new Date(post.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={14} />
+                      {post.readTime}
+                    </span>
+                  </div>
+
+                  <h2 className="font-display text-2xl font-bold text-stone-900 dark:text-stone-50 mb-2 group-hover:text-amber-700 dark:group-hover:text-amber-500 transition-colors">
+                    {post.title}
+                  </h2>
+
+                  <p className="text-stone-600 dark:text-stone-400 leading-relaxed mb-4">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-wrap gap-2">
+                      {post.tags.slice(0, 3).map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-0.5 rounded-full text-xs font-semibold tracking-wide bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <ArrowRight
+                      size={18}
+                      className="text-amber-600 dark:text-amber-500 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0"
+                    />
+                  </div>
+                </Link>
+              </motion.article>
+            ))}
           </div>
-          
-          <button
-            onClick={() => handleContactClick('blog_construction')}
-            className="inline-flex items-center gap-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            <Home size={20} />
-            Ask Me About the Blog
-          </button>
-        </motion.div>
+        </div>
+      </main>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 1 }}
-          className="text-xs text-gray-400 dark:text-gray-500 mt-6"
-        >
-          Pro tip: Bookmark this page and check back later... or don&apos;t, I&apos;m not your boss 😄
-        </motion.p>
-      </motion.div>
-
-      {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
       />
     </div>
   );

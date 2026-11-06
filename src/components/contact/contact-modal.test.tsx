@@ -56,6 +56,22 @@ describe('ContactModal', () => {
     })
   })
 
+  describe('keyboard control', () => {
+    it('calls onClose when Escape is pressed', async () => {
+      const user = userEvent.setup()
+      render(<ContactModal isOpen onClose={onClose} />)
+      await user.keyboard('{Escape}')
+      expect(onClose).toHaveBeenCalledOnce()
+    })
+
+    it('does not call onClose on Escape when closed', async () => {
+      const user = userEvent.setup()
+      render(<ContactModal isOpen={false} onClose={onClose} />)
+      await user.keyboard('{Escape}')
+      expect(onClose).not.toHaveBeenCalled()
+    })
+  })
+
   describe('form validation', () => {
     it('shows error when name is empty on submit', async () => {
       const user = userEvent.setup()

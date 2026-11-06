@@ -58,6 +58,26 @@ describe('Sidebar', () => {
       allLinks(/about/i).forEach(link => expect(link).toHaveAttribute('href', '/about'))
     })
 
+    it('renders the Projects navigation link', () => {
+      render(<Sidebar />)
+      expect(allLinks(/projects/i).length).toBeGreaterThan(0)
+    })
+
+    it('Projects link points to /projects', () => {
+      render(<Sidebar />)
+      allLinks(/projects/i).forEach(link => expect(link).toHaveAttribute('href', '/projects'))
+    })
+
+    it('renders the Writing navigation link', () => {
+      render(<Sidebar />)
+      expect(allLinks(/writing/i).length).toBeGreaterThan(0)
+    })
+
+    it('Writing link points to /blog', () => {
+      render(<Sidebar />)
+      allLinks(/writing/i).forEach(link => expect(link).toHaveAttribute('href', '/blog'))
+    })
+
     it('Contact is a button, not a link', () => {
       render(<Sidebar />)
       expect(screen.queryAllByRole('link', { name: /contact/i })).toHaveLength(0)
@@ -126,6 +146,14 @@ describe('Sidebar', () => {
       render(<Sidebar />)
       allLinks(/home/i).forEach(link =>
         expect(link).not.toHaveAttribute('aria-current', 'page')
+      )
+    })
+
+    it('marks Writing links as current page when on /blog', () => {
+      vi.mocked(usePathname).mockReturnValue('/blog')
+      render(<Sidebar />)
+      allLinks(/writing/i).forEach(link =>
+        expect(link).toHaveAttribute('aria-current', 'page')
       )
     })
   })

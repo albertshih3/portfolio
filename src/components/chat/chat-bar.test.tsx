@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import ChatBar from './chat-bar'
 
@@ -71,6 +71,22 @@ describe('ChatBar', () => {
       expect(screen.queryByRole('dialog', { name: /ai assistant chat/i })).not.toBeInTheDocument()
     })
 
+    it('closes the panel when Escape is pressed', async () => {
+      const setIsOpen = vi.fn()
+      const user = userEvent.setup()
+      render(<ChatBar isOpen setIsOpen={setIsOpen} />)
+      await user.keyboard('{Escape}')
+      expect(setIsOpen).toHaveBeenCalledWith(false)
+    })
+
+    it('does not react to Escape when the panel is closed', async () => {
+      const setIsOpen = vi.fn()
+      const user = userEvent.setup()
+      render(<ChatBar isOpen={false} setIsOpen={setIsOpen} />)
+      await user.keyboard('{Escape}')
+      expect(setIsOpen).not.toHaveBeenCalled()
+    })
+
     it('has an input field in the panel that accepts text', async () => {
       const user = userEvent.setup()
       render(<ChatBar isOpen setIsOpen={vi.fn()} />)
@@ -114,7 +130,19 @@ describe('ChatBar', () => {
       render(<ChatBar isOpen setIsOpen={vi.fn()} />)
       await user.type(screen.getByPlaceholderText(/ask a question/i), 'Hello')
       await user.click(screen.getByRole('button', { name: /send message/i }))
-      await screen.findByText('AI response here')
+      await within(screen.getByTestId('chat-messages')).findByText('AI response here')
+    })
+
+    it('announces new messages to screen readers via an aria-live region', async () => {
+      mockStreamResponse(['Hi there'])
+      const user = userEvent.setup()
+      render(<ChatBar isOpen setIsOpen={vi.fn()} />)
+      await user.type(screen.getByPlaceholderText(/ask a question/i), 'Hello')
+      await user.click(screen.getByRole('button', { name: /send message/i }))
+      await screen.findByText('Hi there')
+      const liveRegion = document.querySelector('[aria-live="polite"]')
+      expect(liveRegion).not.toBeNull()
+      expect(liveRegion).toHaveTextContent('Hi there')
     })
 
     it('shows an error message when the API call fails', async () => {
@@ -123,7 +151,7 @@ describe('ChatBar', () => {
       render(<ChatBar isOpen setIsOpen={vi.fn()} />)
       await user.type(screen.getByPlaceholderText(/ask a question/i), 'Hello')
       await user.click(screen.getByRole('button', { name: /send message/i }))
-      await screen.findByText(/something went wrong/i)
+      await within(screen.getByTestId('chat-messages')).findByText(/something went wrong/i)
     })
 
     it('clears the input after sending a message', async () => {

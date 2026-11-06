@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Mail, User, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
@@ -22,6 +22,15 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   const validate = (): FormErrors => {
     const errs: FormErrors = {};
@@ -88,7 +97,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
   };
 
   const fieldClass = (hasError: boolean) =>
-    `w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 placeholder-stone-400 dark:placeholder-stone-500 transition-colors ${
+    `w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 placeholder-stone-500 dark:placeholder-stone-500 transition-colors ${
       hasError
         ? "border-red-400 dark:border-red-500"
         : "border-stone-300 dark:border-stone-700"
@@ -129,7 +138,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
               <button
                 onClick={onClose}
                 aria-label="Close contact form"
-                className="p-2 text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"
+                className="p-2 text-stone-500 hover:text-stone-700 dark:hover:text-stone-200 transition-colors rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800"
               >
                 <X size={20} />
               </button>
